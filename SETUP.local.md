@@ -211,6 +211,356 @@ npm run lint
 
 ---
 
+## Шаг 7 — Docker: обернуть приложение в контейнер
+
+Docker позволяет запускать приложение в изолированной среде — одинаково на любом сервере и в CI.
+
+### 7.1 Создать Dockerfile
+
+Файл `Dockerfile` в корне проекта:
+
+```dockerfile
+# --- Этап 1: зависимости ---
+FROM node:20-alpine AS deps
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci
+
+# --- Этап 2: сборка ---
+  FROM node:20-alpine AS builder
+  WORKDIR /app
+  COPY --from=deps /app/node_modules ./node_modules
+  COPY . .
+# Переменные окружения нужные при сборке (не секреты!)
+ENV NEXT_TELEMETRY_DISABLED=1
+RUN npm run build
+
+# --- Этап 3: продакшн-образ (минимальный) ---
+FROM node:20-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Создаём непривилегированного пользователя
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+# Копируем только то, что нужно для запуска
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
+EXPOSE 3000
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+CMD ["node", "server.js"]
+```
+
+> Многоэтапная сборка (multi-stage) — финальный образ не содержит node_modules и исходников. Весит ~100MB вместо ~1GB.
+
+### 7.2 Создать .dockerignore
+
+Файл `.dockerignore` в корне — чтобы не копировать лишнее в образ:
+
+```
+node_modules
+.next
+.git
+.env.local
+.env*.local
+*.md
+.vscode
+.husky
+coverage
+```
+
+### 7.3 Включить standalone-вывод в Next.js
+
+В `next.config.ts` добавить опцию `output`:
+
+```ts
+const nextConfig = {
+  output: 'standalone',
+  // ... остальные настройки
+}
+```
+
+> `standalone` — Next.js соберёт минимальный набор файлов для запуска без npm. Нужно для Docker.
+
+### 7.4 Создать docker-compose.yml
+
+Для удобного локального запуска:
+
+```yaml
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
+    env_file:
+      - .env.local
+    restart: unless-stopped
+```
+
+### 7.5 Команды Docker
+
+```bash
+# Собрать образ
+docker build -t aks-fit .
+
+# Запустить контейнер
+docker run -p 3000:3000 --env-file .env.local aks-fit
+
+# Через docker-compose (рекомендуется локально)
+docker compose up --build       # пересобрать и запустить
+docker compose up -d            # в фоне
+docker compose down             # остановить
+docker compose logs -f app      # смотреть логи
+
+# Проверить образы
+docker images | grep aks-fit
+
+# Войти внутрь контейнера для отладки
+docker exec -it <container_id> sh
+```
+
+---
+
+## Шаг 8 — CI/CD: автоматические проверки через GitHub Actions
+
+CI запускается при каждом push и PR — автоматически проверяет линтер и сборку.
+
+### 8.1 Создать структуру папок
+
+```bash
+mkdir -p .github/workflows
+```
+
+### 8.2 Создать workflow: линтер + сборка
+
+Файл `.github/workflows/ci.yml`:
+
+```yaml
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  lint-and-build:
+    name: Lint & Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Build
+        run: npm run build
+        env:
+          # Заглушки для переменных окружения при сборке в CI
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+```
+
+### 8.3 Создать workflow: сборка Docker-образа
+
+Файл `.github/workflows/docker.yml` — проверяет, что образ собирается:
+
+```yaml
+name: Docker Build
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  docker:
+    name: Build Docker image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build image
+        run: docker build -t aks-fit:${{ github.sha }} .
+```
+
+### 8.4 Добавить секреты в GitHub
+
+Чтобы CI имел доступ к переменным окружения:
+
+1. Открыть репозиторий на GitHub
+2. **Settings → Secrets and variables → Actions**
+3. Нажать **New repository secret**
+4. Добавить:
+   - `TELEGRAM_BOT_TOKEN` → твой токен
+   - `TELEGRAM_CHAT_ID` → твой chat id
+
+### 8.5 Структура .github после настройки
+
+```
+.github/
+  workflows/
+    ci.yml        ← линтер + сборка на каждый PR
+    docker.yml    ← сборка Docker-образа при мерже в main
+```
+
+---
+
+## Шаг 9 — Git Flow: имитация командной работы
+
+Git Flow — это соглашение о ветках. Позволяет работать структурированно даже в одиночку.
+
+### 9.1 Схема веток
+
+```
+main        ← стабильный продакшн (деплоится автоматически)
+develop     ← интеграционная ветка (сюда сливаются фичи)
+feature/*   ← новая функциональность
+fix/*       ← исправление багов
+chore/*     ← технические задачи (конфиги, зависимости, рефакторинг)
+```
+
+**Правило:** в `main` и `develop` нельзя пушить напрямую — только через Pull Request.
+
+### 9.2 Начальная настройка
+
+```bash
+# Создать ветку develop от main
+git checkout main
+git checkout -b develop
+git push -u origin develop
+```
+
+### 9.3 Жизненный цикл задачи (Feature Flow)
+
+```bash
+# 1. Начать работу над фичей — всегда от develop
+git checkout develop
+git pull origin develop
+git checkout -b feature/hero-section
+
+# 2. Работать, коммитить по мере прогресса
+git add src/components/Hero/
+git commit -m "feat: add hero section layout"
+
+git add src/components/Hero/Hero.module.scss
+git commit -m "feat: add hero section styles"
+
+# 3. Пушить ветку на GitHub
+git push -u origin feature/hero-section
+
+# 4. Открыть Pull Request: feature/hero-section → develop
+#    (через GitHub UI или gh CLI)
+gh pr create --base develop --title "feat: hero section" --body "Добавил секцию Hero с анимацией"
+
+# 5. После апрува мержим PR (через GitHub)
+# 6. Удалить ветку после мержа
+git branch -d feature/hero-section
+git push origin --delete feature/hero-section
+```
+
+### 9.4 Конвенция именования коммитов (Conventional Commits)
+
+```
+feat:     новая функциональность
+fix:      исправление бага
+chore:    техническое (конфиги, зависимости)
+style:    форматирование, без изменения логики
+refactor: рефакторинг без новых фич и багфиксов
+docs:     документация
+test:     тесты
+```
+
+**Примеры:**
+
+```bash
+git commit -m "feat: add calculator section"
+git commit -m "fix: telegram api error handling"
+git commit -m "chore: update eslint config"
+git commit -m "style: format hero component"
+git commit -m "refactor: extract form validation logic"
+```
+
+### 9.5 Релиз в продакшн
+
+```bash
+# Когда develop готов к релизу — мержим в main через PR
+gh pr create --base main --head develop --title "release: v1.0.0" --body "Релиз первой версии"
+
+# После мержа — тегируем версию
+git checkout main
+git pull origin main
+git tag -a v1.0.0 -m "Release v1.0.0"
+git push origin v1.0.0
+```
+
+### 9.6 Хотфикс (баг в продакшне)
+
+```bash
+# Исправление срочного бага — ветвимся от main, а не develop
+git checkout main
+git checkout -b fix/form-submit-crash
+
+git commit -m "fix: form submit crash on mobile"
+
+# PR: fix/form-submit-crash → main (срочно)
+# Затем тот же фикс мержим в develop:
+git checkout develop
+git merge fix/form-submit-crash
+```
+
+### 9.7 Шпаргалка по командам
+
+```bash
+# Посмотреть все ветки
+git branch -a
+
+# Переключиться на develop и обновить
+git checkout develop && git pull
+
+# Посмотреть историю в виде дерева
+git log --oneline --graph --all
+
+# Посмотреть список PR через GitHub CLI
+gh pr list
+
+# Проверить статус CI для текущей ветки
+gh run list --branch $(git branch --show-current)
+```
+
+---
+
 ## Частые проблемы при установке
 
 ### Ошибка: `Cannot find module 'sass'`
@@ -244,6 +594,24 @@ npm run build && npm start
 # Затем открыть Chrome → DevTools → Lighthouse → PWA
 ```
 
+### Docker: ошибка `ENOENT: no such file or directory, open '/app/.next/standalone/server.js'`
+
+```bash
+# Убедиться что в next.config.ts есть: output: 'standalone'
+# Пересобрать образ после изменения конфига:
+docker build --no-cache -t aks-fit .
+```
+
+### CI падает на шаге lint
+
+```bash
+# Запустить локально те же команды что в CI:
+npm run lint
+npm run format:check
+npm run build
+# Исправить все ошибки до пуша
+```
+
 ---
 
 ## Мои данные (заполни сам — файл не попадёт в git)
@@ -253,4 +621,5 @@ Vercel URL:        https://...
 Telegram Bot Name: @...
 Chat ID:           ...
 Домен (если есть): ...
+GitHub repo:       https://github.com/...
 ```

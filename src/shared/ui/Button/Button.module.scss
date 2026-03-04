@@ -1,0 +1,27 @@
+@use '../../../styles/variables' as *;
+
+.button {
+  position: relative;
+  display: inline-block;
+  padding: 14px 40px;
+  border: none;
+  border-radius: 2px;
+  background: var(--color-orange);
+  cursor: pointer;
+  font-family: $font-playfair;
+  font-size: 15px;
+  font-style: italic;
+  letter-spacing: 0.08em;
+  transition:
+    background 0.3s ease,
+    transform 0.3s ease;
+
+  &:hover {
+    background: #d9623d;
+    transform: translateY(-2px);
+  }
+}
+
+.label {
+  color: #fff;
+}

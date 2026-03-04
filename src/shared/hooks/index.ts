@@ -1,0 +1,1 @@
+export { useParallaxScroll } from './useParallaxScroll';
