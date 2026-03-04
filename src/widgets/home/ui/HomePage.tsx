@@ -1,16 +1,54 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParallaxScroll } from '@/shared/hooks';
 import { Button } from '@/shared/ui';
 import { SERVICES } from '../model';
 import styles from './HomePage.module.scss';
+
+const TESTIMONIALS = [
+  {
+    name: 'Мария К.',
+    text: 'Благодаря Татьяне я наконец-то достигла своей цели — минус 12 кг за 4 месяца. Индивидуальный подход и поддержка на каждом шагу!',
+    initial: 'М',
+  },
+  {
+    name: 'Анна С.',
+    text: 'Три месяца тренировок — и я чувствую себя совершенно другим человеком. Программа питания работает, результат виден уже через 2 недели.',
+    initial: 'А',
+  },
+  {
+    name: 'Ольга П.',
+    text: 'Начинала с нуля, боялась что не справлюсь. Татьяна объяснила всё доступно, теперь я в зале уже полгода и не останавливаюсь!',
+    initial: 'О',
+  },
+  {
+    name: 'Елена В.',
+    text: 'Лучший тренер, с которым мне приходилось работать. Знает всё о питании и тренировках, всегда на связи и поддерживает мотивацию.',
+    initial: 'Е',
+  },
+  {
+    name: 'Дарья М.',
+    text: 'После родов думала, что форму уже не вернуть. За 5 месяцев работы с Татьяной вернулась к добеременному весу и чувствую себя отлично!',
+    initial: 'Д',
+  },
+];
 
 export function HomePage() {
   const { containerRef, mainRef, heroRef, footerRef, contentRef, wrapperRef, stickyHeaderRef } =
     useParallaxScroll();
 
   const aboutTitleRef = useRef<HTMLHeadingElement>(null);
+
+  const total = TESTIMONIALS.length;
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveIndex(i => (i + 1) % total);
+    }, 8500);
+    return () => clearInterval(timer);
+  }, [total]);
 
   useEffect(() => {
     const el = aboutTitleRef.current;
@@ -122,7 +160,47 @@ export function HomePage() {
             </section>
 
             <section className={styles.reviews}>
-              <h2>Reviews</h2>
+              <h2 className={styles.reviewsTitle}>Отзывы</h2>
+              <div className={styles.carousel}>
+                <div className={styles.carouselTrack}>
+                  {TESTIMONIALS.map((item, i) => {
+                    let d = i - activeIndex;
+                    if (d > total / 2) d -= total;
+                    if (d < -total / 2) d += total;
+                    const isCenter = d === 0;
+                    const isVisible = Math.abs(d) === 1;
+                    return (
+                      <div
+                        key={i}
+                        className={styles.carouselItem}
+                        style={{
+                          transform: `translateX(${d * 100}%) scale(${isCenter ? 1 : 0.8})`,
+                          opacity: isCenter ? 1 : isVisible ? 0.2 : 0,
+                          pointerEvents: isCenter || isVisible ? 'auto' : 'none',
+                          cursor: isVisible && !isCenter ? 'pointer' : 'default',
+                        }}
+                        onClick={() => !isCenter && setActiveIndex(i)}
+                      >
+                        <div className={styles.shadowEffect}>
+                          <div className={styles.testimonialAvatar}>{item.initial}</div>
+                          <p className={styles.testimonialText}>{item.text}</p>
+                        </div>
+                        <div className={styles.testimonialName}>{item.name}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className={styles.dots}>
+                  {TESTIMONIALS.map((_, i) => (
+                    <button
+                      key={i}
+                      className={`${styles.dot} ${i === activeIndex ? styles.dotActive : ''}`}
+                      onClick={() => setActiveIndex(i)}
+                      aria-label={`Перейти к отзыву ${i + 1}`}
+                    />
+                  ))}
+                </div>
+              </div>
             </section>
 
             <section className={styles.contacts}>

@@ -354,13 +354,128 @@ $transition: all 0.4s cubic-bezier(0, 0, 0, 1);
 }
 
 .reviews {
-  min-height: 600px;
   background: var(--color-brown-light);
   position: relative;
   z-index: 1;
+  padding: 80px 0 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.reviewsTitle {
+  font-family: $font-playfair;
+  font-size: clamp(28px, 4vw, 60px);
+  text-transform: uppercase;
+  color: var(--color-brown-deep);
+  margin-bottom: 60px;
+  font-style: italic;
+}
+
+.carousel {
+  width: 100%;
+}
+
+.carouselTrack {
+  position: relative;
+  height: 400px;
+  overflow: hidden;
+
+  @media (max-width: $bp-mobile) {
+    height: 500px;
+  }
+}
+
+.carouselItem {
+  position: absolute;
+  top: 0;
+  left: 33.33%;
+  width: 33.33%;
+  padding: 30px 20px 0;
+  transition:
+    transform 0.3s ease-in-out,
+    opacity 0.3s ease-in-out;
+
+  @media (max-width: $bp-mobile) {
+    left: 0;
+    width: 100%;
+  }
+}
+
+.shadowEffect {
+  background: #fff;
+  padding: 20px;
+  border-radius: 4px;
+  text-align: center;
+  border: 1px solid #ececec;
+  box-shadow:
+    0 19px 38px rgba(0, 0, 0, 0.1),
+    0 15px 12px rgba(0, 0, 0, 0.02);
+}
+
+.testimonialAvatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  margin: 0 auto 17px;
+  background: var(--color-brown-mid);
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 32px;
+  font-family: $font-playfair;
+  color: #fff;
+  font-style: italic;
+}
+
+.testimonialText {
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0 0 17px;
+  font-weight: 300;
+  color: #555;
+}
+
+.testimonialName {
+  margin: -17px auto 0;
+  display: table;
+  width: auto;
+  background: var(--color-brown-dark);
+  padding: 9px 35px;
+  border-radius: 12px;
+  text-align: center;
+  color: #fff;
+  box-shadow:
+    0 9px 18px rgba(0, 0, 0, 0.12),
+    0 5px 7px rgba(0, 0, 0, 0.05);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 40px;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(89, 39, 21, 0.25);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transform: scale(0.8);
+  transition: all 250ms ease-out;
+}
+
+.dotActive {
+  background: var(--color-brown-dark);
+  transform: scale(1.2);
 }
 
 .contacts {
@@ -406,7 +521,6 @@ $transition: all 0.4s cubic-bezier(0, 0, 0, 1);
   }
 }
 
-.reviews h2,
 .contacts h2 {
   font-size: clamp(32px, 5vw, 80px);
   text-transform: uppercase;
