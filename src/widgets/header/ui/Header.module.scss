@@ -1,0 +1,159 @@
+@use '../../../styles/variables' as *;
+
+.stickyHeader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  background: $color-text;
+  transform: translateY(-100%);
+  transition: transform 0.4s cubic-bezier(0, 0, 0, 1);
+}
+
+.stickyHeaderVisible {
+  transform: translateY(0);
+}
+
+.nav {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+  color: #fff;
+
+  ul {
+    display: flex;
+    gap: 32px;
+
+    @media (max-width: $bp-mobile) {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 260px;
+      height: 100dvh;
+      flex-direction: column;
+      gap: 0;
+      background: $color-text;
+      padding: 72px 0 24px;
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.4, 0.01, 0.165, 0.99);
+      z-index: 200;
+      overflow-y: auto;
+    }
+
+    &.drawerOpen {
+      @media (max-width: $bp-mobile) {
+        transform: translateX(0);
+      }
+    }
+  }
+
+  .backdrop {
+    display: none;
+
+    @media (max-width: $bp-mobile) {
+      display: block;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 199;
+    }
+  }
+
+  li {
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: #fff;
+      transform: scaleX(0);
+      transform-origin: center;
+      transition: transform 0.3s ease;
+    }
+
+    &:hover::after {
+      transform: scaleX(1);
+    }
+
+    @media (max-width: $bp-mobile) {
+      padding: 13px 32px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &::after {
+        display: none;
+      }
+    }
+  }
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: 700;
+  font-style: italic;
+  font-family: $font-playfair;
+}
+
+// ── Burger button ────────────────────────────────────────────
+
+.burger {
+  display: none;
+  position: relative;
+  width: 24px;
+  height: 18px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+
+  @media (max-width: $bp-mobile) {
+    display: block;
+    position: relative;
+    z-index: 201;
+  }
+}
+
+.bar {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #fff;
+  border-radius: 2px;
+  transition: transform 0.3s cubic-bezier(0.4, 0.01, 0.165, 0.99);
+  transform-origin: center;
+
+  &:nth-child(1) {
+    top: 0;
+  }
+
+  &:nth-child(2) {
+    top: 16px;
+  }
+}
+
+.burgerOpen {
+  .bar:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+
+  .bar:nth-child(2) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+}

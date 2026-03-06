@@ -6,7 +6,7 @@
   padding: 14px 40px;
   border: none;
   border-radius: 2px;
-  background: var(--color-orange);
+  background: $color-text;
   cursor: pointer;
   font-family: $font-playfair;
   font-size: 15px;
@@ -17,7 +17,7 @@
     transform 0.3s ease;
 
   &:hover {
-    background: #d9623d;
+    background: $color-text;
     transform: translateY(-2px);
   }
 }

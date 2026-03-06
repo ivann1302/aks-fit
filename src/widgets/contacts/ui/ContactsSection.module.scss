@@ -1,0 +1,18 @@
+@use '../../../styles/variables' as *;
+
+.contacts {
+  min-height: 500px;
+  background: $color-text;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  h2 {
+    font-size: clamp(32px, 5vw, 80px);
+    text-transform: uppercase;
+    color: #fff;
+    font-family: $font-playfair;
+  }
+}

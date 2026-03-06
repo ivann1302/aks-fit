@@ -1,0 +1,101 @@
+@use '../../../styles/variables' as *;
+
+.faq {
+  background: $color-bg;
+  position: relative;
+  z-index: 1;
+  padding: 140px 60px;
+
+  @media (max-width: $bp-mobile) {
+    padding: 60px 24px;
+  }
+}
+
+.inner {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.title {
+  font-family: $font-playfair;
+  font-size: clamp(28px, 3.5vw, 48px);
+  font-style: italic;
+  color: $color-text;
+  margin-bottom: 48px;
+  line-height: 1.2;
+}
+
+// ── Item ──────────────────────────────────────────────────
+
+.item {
+  margin-bottom: 0;
+}
+
+.trigger {
+  display: none;
+}
+
+.label {
+  border-top: 1px solid $color-text;
+  cursor: pointer;
+  display: block;
+  font-family: $font-playfair;
+  font-size: clamp(15px, 1.5vw, 18px);
+  font-weight: 700;
+  color: $color-text;
+  padding: 24px 40px 24px 0;
+  position: relative;
+  transition: color 0.2s ease;
+
+  // стрелка
+  &::after {
+    border-style: solid;
+    border-color: $color-text;
+    border-width: 1px 1px 0 0;
+    content: '';
+    display: inline-block;
+    position: absolute;
+    right: 4px;
+    top: 28px;
+    width: 10px;
+    height: 10px;
+    transform: rotate(135deg);
+    transition: transform 0.3s ease;
+  }
+
+  &:hover {
+    color: rgba(83, 93, 115, 0.7);
+  }
+}
+
+// последний item — нижняя граница
+.item:last-child .contentWrapper {
+  border-bottom: 1px solid $color-text;
+}
+
+.contentWrapper {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.content {
+  padding: 0 0 24px;
+
+  p {
+    font-family: $font-playfair;
+    font-size: clamp(14px, 1.3vw, 16px);
+    line-height: 1.8;
+    color: rgba(83, 93, 115, 0.85);
+  }
+}
+
+// ── Open state ────────────────────────────────────────────
+
+.trigger:checked + .label + .contentWrapper {
+  max-height: 300px;
+}
+
+.trigger:checked + .label::after {
+  transform: rotate(-45deg);
+}

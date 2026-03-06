@@ -74,15 +74,3 @@ h5,
 h6 {
   overflow-wrap: break-word;
 }
-
-// ============================================================
-// CSS-ПЕРЕМЕННЫЕ (доступны в любом файле через var())
-// ============================================================
-
-:root {
-  --color-brown-dark: #{$color-brown-dark};
-  --color-brown-mid: #{$color-brown-mid};
-  --color-brown-light: #{$color-brown-light};
-  --color-brown-deep: #{$color-brown-deep};
-  --color-orange: #{$color-orange};
-}

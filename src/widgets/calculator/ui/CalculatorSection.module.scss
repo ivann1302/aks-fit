@@ -1,0 +1,449 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.calculator {
+  background: $color-bg;
+  position: relative;
+  z-index: 1;
+  padding: 100px 60px;
+
+  @include mobile {
+    padding: 60px 20px;
+  }
+}
+
+.inner {
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+// ── Title & Description ────────────────────────────────────
+
+.title {
+  font-family: $font-playfair;
+  font-size: clamp(28px, 3.5vw, 52px);
+  font-style: italic;
+  color: $color-text;
+  margin-bottom: 20px;
+  line-height: 1.2;
+
+  &::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 2px;
+    background: $color-text;
+    margin-top: 16px;
+  }
+}
+
+.description {
+  font-family: $font-playfair;
+  font-size: clamp(14px, 1.3vw, 16px);
+  line-height: 1.8;
+  color: rgba(83, 93, 115, 0.7);
+  margin-bottom: 52px;
+}
+
+// ── Form ──────────────────────────────────────────────────
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 44px;
+}
+
+.fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.legend {
+  font-family: $font-playfair;
+  font-size: clamp(16px, 1.6vw, 20px);
+  font-style: italic;
+  color: $color-text;
+  margin-bottom: 24px;
+  letter-spacing: 0.03em;
+}
+
+// ── Gender ────────────────────────────────────────────────
+
+.genderRow {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.hiddenInput {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.genderLabel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 32px;
+  border: 1.5px solid $color-text;
+  border-radius: 2px;
+  font-family: $font-playfair;
+  font-size: 15px;
+  color: $color-text;
+  cursor: pointer;
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease;
+
+  &:hover {
+    border-color: $color-text;
+  }
+}
+
+.genderLabelActive {
+  background: $color-text;
+  border-color: $color-text;
+  color: #fff;
+}
+
+// ── Fields row ────────────────────────────────────────────
+
+.fieldsRow {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+
+  @include mobile {
+    flex-direction: column;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-width: 120px;
+}
+
+.fieldLabel {
+  font-family: $font-playfair;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $color-text;
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input {
+  width: 100%;
+  padding: 12px 44px 12px 16px;
+  border: 1.5px solid $color-bg;
+  border-radius: 2px;
+  background: #fff;
+  font-family: $font-playfair;
+  font-size: 16px;
+  color: $color-text;
+  outline: none;
+  transition: border-color 0.2s ease;
+  appearance: textfield;
+
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    appearance: none;
+  }
+
+  &:focus {
+    border-color: $color-text;
+  }
+}
+
+.unit {
+  position: absolute;
+  right: 14px;
+  font-family: $font-playfair;
+  font-size: 13px;
+  color: $color-text;
+  pointer-events: none;
+}
+
+// ── Slider ────────────────────────────────────────────────
+
+.sliderWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.sliderTrackWrapper {
+  position: relative;
+  height: 6px;
+  background: $color-bg;
+  border-radius: 3px;
+  margin: 12px 0;
+}
+
+.sliderFill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: $color-text;
+  border-radius: 3px;
+  pointer-events: none;
+  transition: width 0.2s ease;
+}
+
+.slider {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  margin: 0;
+  appearance: auto;
+}
+
+.sliderSteps {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 4px;
+}
+
+.sliderStep {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid $color-bg;
+  background: #fff;
+  font-family: $font-playfair;
+  font-size: 14px;
+  color: $color-text;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+
+  &:hover {
+    border-color: $color-text;
+    color: $color-text;
+  }
+}
+
+.sliderStepActive {
+  background: $color-text;
+  border-color: $color-text;
+  color: #fff;
+}
+
+.activityInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 20px;
+  background: #fff;
+  border-left: 3px solid $color-text;
+  border-radius: 0 2px 2px 0;
+}
+
+.activityLabel {
+  font-family: $font-playfair;
+  font-size: 16px;
+  font-style: italic;
+  font-weight: 600;
+  color: $color-text;
+}
+
+.activityDesc {
+  font-family: $font-playfair;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(83, 93, 115, 0.75);
+}
+
+.activityKfa {
+  font-family: $font-playfair;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $color-text;
+  margin-top: 4px;
+}
+
+// ── Goals ─────────────────────────────────────────────────
+
+.goalsRow {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  @include mobile {
+    flex-direction: column;
+  }
+}
+
+.goalCard {
+  flex: 1;
+  min-width: 160px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 20px 16px;
+  border: 1.5px solid $color-bg;
+  border-radius: 4px;
+  cursor: pointer;
+  background: #fff;
+  transition:
+    border-color 0.25s ease,
+    background 0.25s ease;
+
+  &:hover {
+    border-color: $color-text;
+  }
+}
+
+.goalCardActive {
+  border-color: $color-text;
+  background: $color-text;
+
+  .goalLabel,
+  .goalSub {
+    color: #fff;
+  }
+
+  .goalSub {
+    opacity: 0.7;
+  }
+}
+
+.goalLabel {
+  font-family: $font-playfair;
+  font-size: 15px;
+  font-style: italic;
+  color: $color-text;
+  text-align: center;
+  transition: color 0.25s ease;
+}
+
+.goalSub {
+  font-family: $font-playfair;
+  font-size: 13px;
+  color: $color-text;
+  transition: color 0.25s ease;
+}
+
+// ── Submit ────────────────────────────────────────────────
+
+.submitRow {
+  display: flex;
+  justify-content: center;
+  padding-top: 8px;
+}
+
+// ── Result ────────────────────────────────────────────────
+
+.result {
+  margin-top: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.resultCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 60px;
+  background: $color-text;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 420px;
+}
+
+.resultValue {
+  font-family: $font-playfair;
+  font-size: clamp(52px, 8vw, 80px);
+  font-style: italic;
+  color: $color-bg;
+  line-height: 1;
+}
+
+.resultUnit {
+  font-family: $font-playfair;
+  font-size: 18px;
+  color: $color-bg;
+  margin-top: 8px;
+}
+
+.resultCaption {
+  font-family: $font-playfair;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(217, 215, 191, 0.55);
+  margin-top: 12px;
+}
+
+.resultDetails {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  flex-wrap: wrap;
+
+  @include mobile {
+    flex-direction: column;
+  }
+}
+
+.resultDetailItem {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 4px;
+  border-top: 3px solid $color-bg;
+}
+
+.resultDetailLabel {
+  font-family: $font-playfair;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $color-text;
+}
+
+.resultDetailValue {
+  font-family: $font-playfair;
+  font-size: 22px;
+  font-style: italic;
+  color: $color-text;
+}

@@ -21,11 +21,12 @@ export function useParallaxScroll() {
     if (!container || !main || !hero || !footer || !content || !wrapper) return;
 
     let removeScroll: (() => void) | undefined;
+    let heightDocument = 0;
 
-    const setup = () => {
+    const applyHeights = () => {
       const windowHeight = window.innerHeight;
       const footerHeight = footer.offsetHeight;
-      const heightDocument = windowHeight + content.offsetHeight + footerHeight - 20;
+      heightDocument = windowHeight + content.offsetHeight + footerHeight - 20;
 
       container.style.height = `${heightDocument}px`;
       main.style.height = `${heightDocument}px`;
@@ -33,11 +34,16 @@ export function useParallaxScroll() {
       wrapper.style.marginTop = `${windowHeight}px`;
       wrapper.style.marginBottom = `${footerHeight}px`;
       footer.style.bottom = `-${footerHeight}px`;
+    };
+
+    const setup = () => {
+      applyHeights();
 
       const handleScroll = () => {
         const scroll = window.scrollY;
         main.style.top = `-${scroll}px`;
         hero.style.backgroundPositionY = `${50 - (scroll * 100) / heightDocument}%`;
+        const footerHeight = footer.offsetHeight;
         footer.style.bottom = scroll >= footerHeight ? '0px' : `-${footerHeight}px`;
         if (stickyHeader) {
           stickyHeader.style.transform = scroll > 100 ? 'translateY(0)' : 'translateY(-100%)';
@@ -48,14 +54,21 @@ export function useParallaxScroll() {
       removeScroll = () => window.removeEventListener('scroll', handleScroll);
     };
 
+    const resizeObserver = new ResizeObserver(() => {
+      applyHeights();
+    });
+
     if (document.readyState === 'complete') {
       setup();
     } else {
       window.addEventListener('load', setup, { once: true });
     }
 
+    resizeObserver.observe(content);
+
     return () => {
       removeScroll?.();
+      resizeObserver.disconnect();
       window.removeEventListener('load', setup);
     };
   }, []);
