@@ -1,12 +1,12 @@
 import styles from './HeroSection.module.scss';
 
 interface HeroSectionProps {
-  heroRef: React.RefObject<HTMLElement>;
+  heroRef: React.RefObject<HTMLElement | null>;
 }
 
 export function HeroSection({ heroRef }: HeroSectionProps) {
   return (
-    <section className={styles.hero} ref={heroRef}>
+    <section className={styles.hero} ref={heroRef as React.RefObject<HTMLElement>}>
       <h1 className={styles.heroTitle}>
         {['Тренировки.', 'Питание.', 'Результат.'].map((word, i) => (
           <span

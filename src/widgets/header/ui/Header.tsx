@@ -5,7 +5,7 @@ import Link from 'next/link';
 import styles from './Header.module.scss';
 
 interface HeaderProps {
-  headerRef?: React.RefObject<HTMLElement>;
+  headerRef?: React.RefObject<HTMLElement | null>;
   alwaysVisible?: boolean;
 }
 
@@ -17,7 +17,7 @@ export function Header({ headerRef, alwaysVisible = false }: HeaderProps) {
   );
 
   return (
-    <header className={headerClass} ref={headerRef}>
+    <header className={headerClass} ref={headerRef as React.RefObject<HTMLElement>}>
       <nav className={styles.nav}>
         <Link href="/" className={styles.logo}>
           AKS Fit
