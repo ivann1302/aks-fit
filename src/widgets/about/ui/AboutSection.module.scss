@@ -1,7 +1,7 @@
 @use '../../../styles/variables' as *;
 
 .about {
-  background: $color-text;
+  background: $color-accent;
   position: relative;
   z-index: 1;
   padding: 100px 60px;
@@ -18,7 +18,7 @@
   font-family: $font-playfair;
   font-size: clamp(28px, 3.5vw, 52px);
   font-style: italic;
-  color: $color-bg;
+  color: $color-primary;
   margin-bottom: 48px;
   line-height: 1.2;
   width: fit-content;
@@ -28,7 +28,7 @@
     display: block;
     width: 100%;
     height: 2px;
-    background: $color-bg;
+    background: $color-primary;
     margin-top: 20px;
     transform: scaleX(0);
     transform-origin: left;
@@ -52,7 +52,7 @@
   font-family: $font-playfair;
   font-size: clamp(18px, 2vw, 24px);
   font-style: italic;
-  color: $color-bg;
+  color: $color-primary;
   margin-top: 16px;
   line-height: 1.6;
 }

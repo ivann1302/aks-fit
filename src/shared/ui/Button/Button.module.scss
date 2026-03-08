@@ -6,7 +6,7 @@
   padding: 14px 40px;
   border: none;
   border-radius: 2px;
-  background: $color-text;
+  background: $color-accent;
   cursor: pointer;
   font-family: $font-playfair;
   font-size: 15px;
@@ -17,7 +17,7 @@
     transform 0.3s ease;
 
   &:hover {
-    background: $color-text;
+    background: $color-accent;
     transform: translateY(-2px);
   }
 }

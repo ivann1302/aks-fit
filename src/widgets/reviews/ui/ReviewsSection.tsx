@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { TESTIMONIALS } from '../model';
 import styles from './ReviewsSection.module.scss';
 
 export function ReviewsSection() {
   const total = TESTIMONIALS.length;
   const [activeIndex, setActiveIndex] = useState(0);
+  const touchStartX = useRef<number | null>(null);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -15,11 +16,28 @@ export function ReviewsSection() {
     return () => clearInterval(timer);
   }, [total]);
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const delta = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(delta) > 50) {
+      setActiveIndex(i => (delta > 0 ? (i + 1) % total : (i - 1 + total) % total));
+    }
+    touchStartX.current = null;
+  };
+
   return (
     <section className={styles.reviews}>
       <h2 className={styles.reviewsTitle}>Отзывы</h2>
       <div className={styles.carousel}>
-        <div className={styles.carouselTrack}>
+        <div
+          className={styles.carouselTrack}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
           {TESTIMONIALS.map((item, i) => {
             let d = i - activeIndex;
             if (d > total / 2) d -= total;

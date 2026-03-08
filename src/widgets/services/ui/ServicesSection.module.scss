@@ -1,7 +1,7 @@
 @use '../../../styles/variables' as *;
 
 .content {
-  background: $color-bg;
+  background: $color-primary;
   position: relative;
   z-index: 1;
   padding: 80px 60px;
@@ -78,20 +78,20 @@
 }
 
 .cardFront {
-  background: $color-bg;
+  background: $color-primary;
 }
 
 .cardImage {
   position: absolute;
   inset: 0;
-  background-color: $color-bg;
+  background-color: $color-primary;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
 
 .cardBack {
-  background: $color-text;
+  background: $color-accent;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -110,7 +110,7 @@
     &::after {
       font-family: $font-playfair;
       font-size: 72px;
-      color: $color-bg;
+      color: $color-primary;
       position: absolute;
       line-height: 1;
       opacity: 0.8;

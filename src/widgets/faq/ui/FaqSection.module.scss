@@ -1,7 +1,7 @@
 @use '../../../styles/variables' as *;
 
 .faq {
-  background: $color-bg;
+  background: $color-primary;
   position: relative;
   z-index: 1;
   padding: 140px 60px;
@@ -36,7 +36,7 @@
 }
 
 .label {
-  border-top: 1px solid $color-text;
+  border-top: 1px solid $color-accent;
   cursor: pointer;
   display: block;
   font-family: $font-playfair;
@@ -64,13 +64,13 @@
   }
 
   &:hover {
-    color: rgba(83, 93, 115, 0.7);
+    color: rgba(64, 62, 59, 0.7);
   }
 }
 
 // последний item — нижняя граница
 .item:last-child .contentWrapper {
-  border-bottom: 1px solid $color-text;
+  border-bottom: 1px solid $color-accent;
 }
 
 .contentWrapper {
@@ -86,7 +86,7 @@
     font-family: $font-playfair;
     font-size: clamp(14px, 1.3vw, 16px);
     line-height: 1.8;
-    color: rgba(83, 93, 115, 0.85);
+    color: rgba(64, 62, 59, 0.85);
   }
 }
 

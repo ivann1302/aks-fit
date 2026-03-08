@@ -6,6 +6,7 @@ import { Footer } from '@/widgets/footer';
 import { HeroSection } from '@/widgets/hero';
 import { AboutSection } from '@/widgets/about';
 import { ServicesSection } from '@/widgets/services';
+import { ProcessSection } from '@/widgets/process';
 import { ReviewsSection } from '@/widgets/reviews';
 import { ContactsSection } from '@/widgets/contacts';
 import { FaqSection } from '@/widgets/faq';
@@ -24,6 +25,7 @@ export function HomePage() {
           <div ref={contentRef}>
             <AboutSection />
             <ServicesSection />
+            <ProcessSection />
             <ReviewsSection />
             <ContactsSection />
             <FaqSection />

@@ -2,7 +2,7 @@
 @use '../../../styles/mixins' as *;
 
 .calculator {
-  background: $color-bg;
+  background: $color-primary;
   position: relative;
   z-index: 1;
   padding: 100px 60px;
@@ -32,7 +32,7 @@
     display: block;
     width: 80px;
     height: 2px;
-    background: $color-text;
+    background: $color-accent;
     margin-top: 16px;
   }
 }
@@ -41,7 +41,7 @@
   font-family: $font-playfair;
   font-size: clamp(14px, 1.3vw, 16px);
   line-height: 1.8;
-  color: rgba(83, 93, 115, 0.7);
+  color: rgba(64, 62, 59, 0.7);
   margin-bottom: 52px;
 }
 
@@ -88,7 +88,7 @@
   align-items: center;
   justify-content: center;
   padding: 12px 32px;
-  border: 1.5px solid $color-text;
+  border: 1.5px solid $color-accent;
   border-radius: 2px;
   font-family: $font-playfair;
   font-size: 15px;
@@ -105,7 +105,7 @@
 }
 
 .genderLabelActive {
-  background: $color-text;
+  background: $color-accent;
   border-color: $color-text;
   color: #fff;
 }
@@ -147,7 +147,7 @@
 .input {
   width: 100%;
   padding: 12px 44px 12px 16px;
-  border: 1.5px solid $color-bg;
+  border: 1.5px solid $color-primary;
   border-radius: 2px;
   background: #fff;
   font-family: $font-playfair;
@@ -188,7 +188,7 @@
 .sliderTrackWrapper {
   position: relative;
   height: 6px;
-  background: $color-bg;
+  background: $color-primary;
   border-radius: 3px;
   margin: 12px 0;
 }
@@ -198,7 +198,7 @@
   left: 0;
   top: 0;
   height: 100%;
-  background: $color-text;
+  background: $color-accent;
   border-radius: 3px;
   pointer-events: none;
   transition: width 0.2s ease;
@@ -225,7 +225,7 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border: 2px solid $color-bg;
+  border: 2px solid $color-primary;
   background: #fff;
   font-family: $font-playfair;
   font-size: 14px;
@@ -243,7 +243,7 @@
 }
 
 .sliderStepActive {
-  background: $color-text;
+  background: $color-accent;
   border-color: $color-text;
   color: #fff;
 }
@@ -254,7 +254,7 @@
   gap: 4px;
   padding: 16px 20px;
   background: #fff;
-  border-left: 3px solid $color-text;
+  border-left: 3px solid $color-accent;
   border-radius: 0 2px 2px 0;
 }
 
@@ -270,7 +270,7 @@
   font-family: $font-playfair;
   font-size: 14px;
   line-height: 1.6;
-  color: rgba(83, 93, 115, 0.75);
+  color: rgba(64, 62, 59, 0.75);
 }
 
 .activityKfa {
@@ -302,7 +302,7 @@
   align-items: center;
   gap: 6px;
   padding: 20px 16px;
-  border: 1.5px solid $color-bg;
+  border: 1.5px solid $color-primary;
   border-radius: 4px;
   cursor: pointer;
   background: #fff;
@@ -317,7 +317,7 @@
 
 .goalCardActive {
   border-color: $color-text;
-  background: $color-text;
+  background: $color-accent;
 
   .goalLabel,
   .goalSub {
@@ -380,7 +380,7 @@
   flex-direction: column;
   align-items: center;
   padding: 40px 60px;
-  background: $color-text;
+  background: $color-accent;
   border-radius: 4px;
   width: 100%;
   max-width: 420px;
@@ -390,14 +390,14 @@
   font-family: $font-playfair;
   font-size: clamp(52px, 8vw, 80px);
   font-style: italic;
-  color: $color-bg;
+  color: $color-primary;
   line-height: 1;
 }
 
 .resultUnit {
   font-family: $font-playfair;
   font-size: 18px;
-  color: $color-bg;
+  color: $color-primary;
   margin-top: 8px;
 }
 
@@ -430,7 +430,7 @@
   padding: 20px;
   background: #fff;
   border-radius: 4px;
-  border-top: 3px solid $color-bg;
+  border-top: 3px solid $color-primary;
 }
 
 .resultDetailLabel {
