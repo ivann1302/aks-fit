@@ -14,8 +14,16 @@ import { FaqSection } from '@/widgets/faq';
 import styles from './HomePage.module.scss';
 
 export function HomePage() {
-  const { containerRef, mainRef, heroRef, footerRef, contentRef, wrapperRef, stickyHeaderRef } =
-    useParallaxScroll();
+  const {
+    containerRef,
+    mainRef,
+    heroRef,
+    footerRef,
+    scrollBtnRef,
+    contentRef,
+    wrapperRef,
+    stickyHeaderRef,
+  } = useParallaxScroll();
 
   return (
     <div className={styles.scrollAnimate} ref={containerRef}>
@@ -32,7 +40,7 @@ export function HomePage() {
             <ContactsSection />
             <FaqSection />
           </div>
-          <Footer footerRef={footerRef} />
+          <Footer footerRef={footerRef} scrollBtnRef={scrollBtnRef} />
         </div>
       </div>
     </div>

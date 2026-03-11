@@ -1,13 +1,49 @@
+'use client';
+
+import { useSyncExternalStore } from 'react';
+import { createPortal } from 'react-dom';
 import styles from './Footer.module.scss';
 
 interface FooterProps {
   footerRef: React.RefObject<HTMLElement | null>;
+  scrollBtnRef: React.RefObject<HTMLButtonElement | null>;
 }
 
-export function Footer({ footerRef }: FooterProps) {
+// useSyncExternalStore — рекомендованный способ определить, что мы на клиенте (без setState в useEffect)
+const subscribe = () => () => {};
+const getSnapshot = () => true;
+const getServerSnapshot = () => false;
+
+export function Footer({ footerRef, scrollBtnRef }: FooterProps) {
+  const mounted = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
   return (
-    <footer className={styles.footer} ref={footerRef as React.RefObject<HTMLElement>}>
-      <p>© {new Date().getFullYear()} AKS Fit. Все права защищены.</p>
-    </footer>
+    <>
+      <footer className={styles.footer} ref={footerRef as React.RefObject<HTMLElement>}>
+        <p>© {new Date().getFullYear()} AKS Fit. Все права защищены.</p>
+      </footer>
+      {mounted &&
+        createPortal(
+          <button
+            ref={scrollBtnRef}
+            className={styles.scrollTop}
+            onClick={scrollToTop}
+            aria-label="Наверх"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <polyline
+                points="5,15 12,8 19,15"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>,
+          document.body
+        )}
+    </>
   );
 }
