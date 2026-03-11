@@ -1,6 +1,8 @@
 'use client';
 
 import Image from 'next/image';
+import { useRef, useEffect } from 'react';
+import DESCRIPTIONS from './../model/process';
 import styles from './ProcessSection.module.scss';
 
 // Знакомство: силуэт человека + речевой пузырь с точками
@@ -70,34 +72,91 @@ const STEPS = [
   },
 ];
 
-const DESCRIPTIONS: Record<string, string> = {
-  Знакомство:
-    'Бесплатная консультация: обсуждаем твои цели, образ жизни, противопоказания и пожелания.',
-  Программа:
-    'Составляю индивидуальный план тренировок и питания, адаптированный под твои цели и возможности.',
-  Тренировки:
-    'Работаем вместе: онлайн или офлайн. Я контролирую технику, корректирую нагрузку и мотивирую.',
-  Питание:
-    'Помогаю выстроить рацион без жёстких диет: сбалансированное питание под твои цели и образ жизни.',
-  Поддержка:
-    'Всегда на связи — отвечаю на вопросы, помогаю с питанием и слежу за твоим прогрессом.',
-  Результат:
-    'Анализируем достижения и при необходимости корректируем программу для дальнейшего роста.',
-};
-
 export function ProcessSection() {
+  const phoneRef = useRef<HTMLDivElement>(null);
+  const phoneWrapperRef = useRef<HTMLDivElement>(null);
+  const layoutRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const els = [phoneWrapperRef.current, layoutRef.current];
+    const observer = new IntersectionObserver(
+      entries => entries.forEach(e => e.isIntersecting && e.target.classList.add(styles.visible)),
+      { threshold: 0.15 }
+    );
+    els.forEach(el => el && observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const phoneEl = phoneRef.current;
+    if (!phoneEl) return;
+
+    let targetRx = 0,
+      targetRy = 0;
+    let rx = 0,
+      ry = 0;
+    let hasInteracted = false;
+    let time = 0;
+    let rafId: number;
+
+    const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+    const tick = () => {
+      if (!hasInteracted) {
+        time += 0.015;
+        targetRy = Math.sin(time) * 25;
+        targetRx = Math.cos(time * 0.8) * 15;
+      }
+      rx = lerp(rx, targetRx, 0.08);
+      ry = lerp(ry, targetRy, 0.08);
+      phoneEl.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+      rafId = requestAnimationFrame(tick);
+    };
+
+    const onMouseMove = (e: MouseEvent) => {
+      hasInteracted = true;
+      const rect = phoneEl.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = e.clientX - cx;
+      const dy = e.clientY - cy;
+      const maxDist = Math.min(window.innerWidth, window.innerHeight) * 0.45;
+      const maxTilt = 40;
+      targetRy = Math.max(-maxTilt, Math.min(maxTilt, (dx / maxDist) * maxTilt));
+      targetRx = Math.max(-maxTilt, Math.min(maxTilt, -(dy / maxDist) * maxTilt));
+    };
+
+    const onMouseLeave = () => {
+      hasInteracted = false;
+      targetRx = 0;
+      targetRy = 0;
+    };
+
+    phoneEl.addEventListener('mousemove', onMouseMove);
+    phoneEl.addEventListener('mouseleave', onMouseLeave);
+    rafId = requestAnimationFrame(tick);
+
+    return () => {
+      phoneEl.removeEventListener('mousemove', onMouseMove);
+      phoneEl.removeEventListener('mouseleave', onMouseLeave);
+      cancelAnimationFrame(rafId);
+    };
+  }, []);
+
   return (
     <section className={styles.process}>
-      <div className={styles.phoneWrapper}>
-        <Image
-          src="/images/phone.png"
-          alt="Телефон"
-          width={620}
-          height={1240}
-          className={styles.phone}
-        />
+      <div ref={phoneWrapperRef} className={`${styles.phoneWrapper} ${styles.slideLeft}`}>
+        <div className={styles.phoneRotate} ref={phoneRef}>
+          <Image
+            src="/images/phone.png"
+            alt="Телефон"
+            width={620}
+            height={1240}
+            className={styles.phone}
+          />
+        </div>
       </div>
-      <div className={styles.layout}>
+      <div ref={layoutRef} className={`${styles.layout} ${styles.slideRight}`}>
         <div className={styles.right}>
           <h2 className={styles.title}>Как мы будем с тобой работать?</h2>
           <div className={styles.inner}>

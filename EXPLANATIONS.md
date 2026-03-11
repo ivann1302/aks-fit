@@ -2,6 +2,149 @@
 
 ---
 
+## Анимация вращения телефона (ProcessSection)
+
+### Что видит пользователь
+
+Изображение телефона плавно покачивается само по себе. Когда наводишь курсор — телефон поворачивается вслед за мышью. Убираешь курсор — возвращается к покачиванию.
+
+---
+
+### Из чего состоит
+
+**3D-пространство в CSS:**
+
+```scss
+.phoneWrapper {
+  perspective: 800px; // создаёт "глубину" — без этого 3D не видно
+}
+
+.phoneRotate {
+  transform-style: preserve-3d; // дочерние элементы тоже в 3D
+  will-change: transform;       // подсказка браузеру: готовь GPU
+}
+```
+
+`perspective` — это как расстояние от глаз до экрана. Чем меньше число, тем сильнее искажение перспективы.
+
+**Поворот через CSS-трансформацию:**
+
+```
+rotateX(Xdeg) — наклон вперёд/назад (ось X — горизонтальная)
+rotateY(Ydeg) — поворот влево/вправо (ось Y — вертикальная)
+```
+
+---
+
+### requestAnimationFrame — игровой цикл
+
+```ts
+const tick = () => {
+  // обновить позицию...
+  rafId = requestAnimationFrame(tick); // вызвать себя снова
+};
+requestAnimationFrame(tick); // запустить
+```
+
+`requestAnimationFrame` вызывает функцию перед каждым кадром браузера (~60 раз в секунду). Это как `setInterval(fn, 16ms)`, но умнее: браузер сам выбирает момент, не тратит ресурсы на скрытых вкладках.
+
+---
+
+### lerp — плавное движение
+
+```ts
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+rx = lerp(rx, targetRx, 0.08); // текущее → целевое, шаг 8%
+```
+
+**Линейная интерполяция (lerp)** — каждый кадр двигаемся на `t` часть от расстояния до цели.
+
+```
+targetRx = 30°, rx = 0°
+кадр 1: rx = 0 + (30-0)*0.08 = 2.4°
+кадр 2: rx = 2.4 + (30-2.4)*0.08 = 4.6°
+кадр 3: rx = 4.6 + (30-4.6)*0.08 = 6.6°
+...
+```
+
+Чем ближе к цели — тем медленнее. Получается плавное замедление, без CSS `transition`.
+
+---
+
+### Авто-анимация (когда мышь не над телефоном)
+
+```ts
+if (!hasInteracted) {
+  time += 0.015;
+  targetRy = Math.sin(time) * 25;      // качание влево-вправо
+  targetRx = Math.cos(time * 0.8) * 15; // наклон вперёд-назад
+}
+```
+
+`Math.sin` и `Math.cos` возвращают значения от -1 до 1, которые плавно меняются со временем. Умножаем на амплитуду (25° и 15°). Разные коэффициенты скорости (`time` vs `time * 0.8`) дают ощущение неравномерного, живого движения.
+
+---
+
+### Реакция на мышь
+
+```ts
+const onMouseMove = (e: MouseEvent) => {
+  hasInteracted = true;
+  const rect = phoneEl.getBoundingClientRect(); // координаты элемента
+  const cx = rect.left + rect.width / 2;        // центр X
+  const cy = rect.top + rect.height / 2;         // центр Y
+
+  const dx = e.clientX - cx; // насколько мышь правее центра
+  const dy = e.clientY - cy; // насколько мышь ниже центра
+
+  const maxDist = Math.min(window.innerWidth, window.innerHeight) * 0.45;
+  const maxTilt = 40;
+
+  targetRy = (dx / maxDist) * maxTilt; // мышь вправо → поворот вправо
+  targetRx = -(dy / maxDist) * maxTilt; // мышь вниз → наклон назад
+};
+```
+
+Мышь в центре телефона → `dx = 0, dy = 0` → нет поворота.
+Мышь у края → максимум ±40°. `Math.max/Math.min` не даёт выйти за предел.
+
+---
+
+### Полная схема работы
+
+```
+requestAnimationFrame запускает tick() ~60 раз/сек
+        │
+        ▼
+   hasInteracted?
+   ├── НЕТ → sin/cos → targetRx/targetRy (авто-качание)
+   └── ДА  → mousemove уже выставил targetRx/targetRy
+        │
+        ▼
+   lerp(rx → targetRx)   // плавно догоняем цель
+   lerp(ry → targetRy)
+        │
+        ▼
+   phoneEl.style.transform = rotateX(rx) rotateY(ry)
+```
+
+---
+
+### Очистка в useEffect
+
+```ts
+return () => {
+  phoneEl.removeEventListener('mousemove', onMouseMove);
+  phoneEl.removeEventListener('mouseleave', onMouseLeave);
+  cancelAnimationFrame(rafId); // останавливаем цикл
+};
+```
+
+React вызывает эту функцию когда компонент удаляется со страницы. Без очистки — `requestAnimationFrame` продолжал бы крутиться в памяти вечно (утечка).
+
+---
+
 ## FSD (Feature-Sliced Design)
 
 ### Главная идея

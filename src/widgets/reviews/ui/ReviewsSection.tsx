@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
+import Image from 'next/image';
 import { TESTIMONIALS } from '../model';
 import styles from './ReviewsSection.module.scss';
 
@@ -16,7 +17,14 @@ export function ReviewsSection() {
 
   return (
     <section className={styles.reviews}>
-      <h2 className={styles.reviewsTitle}>Отзывы</h2>
+      <Image
+        src="/images/reviews.png"
+        alt=""
+        width={270}
+        height={270}
+        className={styles.reviewsIcon}
+      />
+      <h2 className={styles.reviewsTitle}>Голос моих учениц</h2>
       <div className={styles.sliderRow}>
         <button className={styles.btn} onClick={() => scroll(-1)} aria-label="Назад" />
         <div className={styles.sliderTrack} ref={trackRef}>

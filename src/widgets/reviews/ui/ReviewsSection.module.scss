@@ -4,10 +4,19 @@
   background: $color-primary;
   position: relative;
   z-index: 1;
-  padding: 80px 0 60px;
+  padding: 0 0 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.reviewsIcon {
+  display: block;
+  width: max-content;
+  position: relative;
+  left: -267px;
+  top: 95px;
+  object-fit: contain;
 }
 
 .reviewsTitle {

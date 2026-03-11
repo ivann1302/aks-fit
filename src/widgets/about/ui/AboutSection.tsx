@@ -28,10 +28,10 @@ export function AboutSection() {
     <section className={styles.about}>
       <div className={styles.aboutInner}>
         <Image
-          src="/images/hello.png"
+          src="/images/helloAbout.png"
           alt=""
-          width={140}
-          height={140}
+          width={180}
+          height={180}
           className={styles.helloIcon}
         />
         <h2 className={styles.aboutTitle} ref={titleRef}>
