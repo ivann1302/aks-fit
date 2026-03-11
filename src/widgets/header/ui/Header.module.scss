@@ -42,7 +42,7 @@
       flex-direction: column;
       gap: 0;
       padding: 72px 0 24px;
-      background: $color-header-footer;
+      background: $color-primary;
       transform: translateX(100%);
       transition: transform 0.35s cubic-bezier(0.4, 0.01, 0.165, 0.99);
       z-index: 200;
@@ -56,20 +56,10 @@
     }
   }
 
-  .backdrop {
-    display: none;
-
-    @media (max-width: $bp-mobile) {
-      display: block;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 199;
-    }
-  }
-
   li {
     cursor: pointer;
+    display: flex;
+    align-items: center;
     font-size: 14px;
     font-weight: 600;
     letter-spacing: 0.1em;
@@ -96,7 +86,8 @@
       background: none;
       padding: 13px 32px;
       border: none;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      color: $color-accent;
 
       &:last-child {
         border-bottom: none;
@@ -104,9 +95,9 @@
 
       &:hover {
         background: none;
-        color: $color-primary;
+        color: $color-accent;
         border: none;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
       }
     }
   }
@@ -165,5 +156,19 @@
 
   .bar:nth-child(2) {
     transform: translateY(-8px) rotate(-45deg);
+  }
+}
+
+// ── Backdrop ────────────────────────────────────────────────
+
+.backdrop {
+  display: none;
+
+  @media (max-width: $bp-mobile) {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 99;
   }
 }

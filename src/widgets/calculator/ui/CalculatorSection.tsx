@@ -229,7 +229,9 @@ export function CalculatorSection() {
           </fieldset>
 
           <div className={styles.submitRow}>
-            <Button type="submit">Рассчитать</Button>
+            <Button animated type="submit">
+              Рассчитать
+            </Button>
           </div>
         </form>
 

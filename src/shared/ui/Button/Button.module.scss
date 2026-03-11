@@ -17,7 +17,10 @@
   color: #fff;
   letter-spacing: 0.06em;
   background-color: $color-accent;
-  transition: background-color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.8s ease;
 
   &:hover {
     background-color: $color-accent-hover;
@@ -30,5 +33,16 @@
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+  }
+}
+
+.animated {
+  transform: scaleX(0.1) translateY(6px);
+  opacity: 0;
+  transform-origin: center;
+
+  &.visible {
+    transform: scaleX(1) translateY(0);
+    opacity: 1;
   }
 }

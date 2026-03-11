@@ -2,6 +2,7 @@
 
 import { useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
+import Image from 'next/image';
 import styles from './Footer.module.scss';
 
 interface FooterProps {
@@ -22,6 +23,29 @@ export function Footer({ footerRef, scrollBtnRef }: FooterProps) {
   return (
     <>
       <footer className={styles.footer} ref={footerRef as React.RefObject<HTMLElement>}>
+        <div className={styles.socials}>
+          <a
+            href="https://instagram.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+          >
+            <Image
+              src="/images/icons/contacts/instagram.png"
+              alt="Instagram"
+              width={48}
+              height={48}
+            />
+          </a>
+          <a href="https://t.me" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
+            <Image
+              src="/images/icons/contacts/telegram.png"
+              alt="Telegram"
+              width={48}
+              height={48}
+            />
+          </a>
+        </div>
         <p>© {new Date().getFullYear()} AKS Fit. Все права защищены.</p>
       </footer>
       {mounted &&

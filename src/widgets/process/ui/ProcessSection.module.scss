@@ -13,7 +13,7 @@
 
   @media (max-width: $bp-mobile) {
     flex-direction: column;
-    padding: 60px 24px;
+    padding: 60px 24px 0;
     gap: 40px;
   }
 }
@@ -30,6 +30,16 @@
 .layout {
   flex: 1;
   max-width: 860px;
+
+  @media (max-width: $bp-mobile) {
+    order: -1;
+  }
+}
+
+.parallaxWrapper {
+  @media (max-width: $bp-mobile) {
+    margin-top: 180px;
+  }
 }
 
 .phoneWrapper {
@@ -37,7 +47,6 @@
   perspective: 800px;
 
   @media (max-width: $bp-mobile) {
-    order: 1;
     width: 100%;
     display: flex;
     justify-content: center;

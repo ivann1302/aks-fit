@@ -8,6 +8,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  @media (max-width: $bp-mobile) {
+    margin-top: -80px;
+  }
 }
 
 .reviewsIcon {
@@ -17,6 +21,11 @@
   left: -267px;
   top: 95px;
   object-fit: contain;
+
+  @media (max-width: $bp-mobile) {
+    top: 84px;
+    left: -43px;
+  }
 }
 
 .reviewsTitle {

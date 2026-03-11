@@ -9,7 +9,9 @@ export function ContactsSection() {
         <form className={styles.form}>
           <input className={styles.input} type="text" placeholder="Ваше имя" name="name" />
           <input className={styles.input} type="tel" placeholder="Ваш телефон" name="phone" />
-          <Button type="submit">Заказать консультацию</Button>
+          <Button animated type="submit">
+            Заказать консультацию
+          </Button>
         </form>
       </div>
     </section>

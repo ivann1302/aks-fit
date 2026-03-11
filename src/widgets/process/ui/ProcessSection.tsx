@@ -76,6 +76,8 @@ export function ProcessSection() {
   const phoneRef = useRef<HTMLDivElement>(null);
   const phoneWrapperRef = useRef<HTMLDivElement>(null);
   const layoutRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const parallaxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const els = [phoneWrapperRef.current, layoutRef.current];
@@ -143,17 +145,38 @@ export function ProcessSection() {
     };
   }, []);
 
+  useEffect(() => {
+    const section = sectionRef.current;
+    const parallax = parallaxRef.current;
+    if (!section || !parallax) return;
+
+    const MAX_OFFSET = 180;
+
+    const onScroll = () => {
+      const rect = section.getBoundingClientRect();
+      const scrolledIn = -rect.top;
+      const clamped = Math.max(0, Math.min(section.offsetHeight, scrolledIn));
+      parallax.style.transform = `translateY(${-(clamped / section.offsetHeight) * MAX_OFFSET}px)`;
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   return (
-    <section className={styles.process}>
-      <div ref={phoneWrapperRef} className={`${styles.phoneWrapper} ${styles.slideLeft}`}>
-        <div className={styles.phoneRotate} ref={phoneRef}>
-          <Image
-            src="/images/phone.png"
-            alt="Телефон"
-            width={620}
-            height={1240}
-            className={styles.phone}
-          />
+    <section ref={sectionRef} className={styles.process}>
+      <div ref={parallaxRef} className={styles.parallaxWrapper}>
+        <div ref={phoneWrapperRef} className={`${styles.phoneWrapper} ${styles.slideLeft}`}>
+          <div className={styles.phoneRotate} ref={phoneRef}>
+            <Image
+              src="/images/phone.png"
+              alt="Телефон"
+              width={620}
+              height={1240}
+              className={styles.phone}
+            />
+          </div>
         </div>
       </div>
       <div ref={layoutRef} className={`${styles.layout} ${styles.slideRight}`}>

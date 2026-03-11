@@ -17,32 +17,34 @@ export function Header({ headerRef, alwaysVisible = false }: HeaderProps) {
   );
 
   return (
-    <header className={headerClass} ref={headerRef as React.RefObject<HTMLElement>}>
-      <nav className={styles.nav}>
-        <Link href="/" className={styles.logo}>
-          Aksenova fitness
-        </Link>
-        <button
-          className={`${styles.burger} ${menuOpen ? styles.burgerOpen : ''}`}
-          onClick={() => setMenuOpen(o => !o)}
-          aria-label="Открыть меню"
-          aria-expanded={menuOpen}
-        >
-          <span className={styles.bar} />
-          <span className={styles.bar} />
-        </button>
-        <ul className={menuOpen ? styles.drawerOpen : ''}>
-          <li onClick={() => setMenuOpen(false)}>Обо мне</li>
-          <li onClick={() => setMenuOpen(false)}>Фитнес</li>
-          <li onClick={() => setMenuOpen(false)}>Питание</li>
-          <li onClick={() => setMenuOpen(false)}>Статьи</li>
-          <li onClick={() => setMenuOpen(false)}>Контакты</li>
-          <li onClick={() => setMenuOpen(false)}>
-            <Link href="/calculator">Калькулятор</Link>
-          </li>
-        </ul>
-        {menuOpen && <div className={styles.backdrop} onClick={() => setMenuOpen(false)} />}
-      </nav>
-    </header>
+    <>
+      <header className={headerClass} ref={headerRef as React.RefObject<HTMLElement>}>
+        <nav className={styles.nav}>
+          <Link href="/" className={styles.logo}>
+            Aksenova fitness
+          </Link>
+          <button
+            className={`${styles.burger} ${menuOpen ? styles.burgerOpen : ''}`}
+            onClick={() => setMenuOpen(o => !o)}
+            aria-label="Открыть меню"
+            aria-expanded={menuOpen}
+          >
+            <span className={styles.bar} />
+            <span className={styles.bar} />
+          </button>
+          <ul className={menuOpen ? styles.drawerOpen : ''}>
+            <li onClick={() => setMenuOpen(false)}>Обо мне</li>
+            <li onClick={() => setMenuOpen(false)}>Фитнес</li>
+            <li onClick={() => setMenuOpen(false)}>Питание</li>
+            <li onClick={() => setMenuOpen(false)}>Статьи</li>
+            <li onClick={() => setMenuOpen(false)}>Контакты</li>
+            <li onClick={() => setMenuOpen(false)}>
+              <Link href="/calculator">Калькулятор</Link>
+            </li>
+          </ul>
+        </nav>
+      </header>
+      {menuOpen && <div className={styles.backdrop} onClick={() => setMenuOpen(false)} />}
+    </>
   );
 }

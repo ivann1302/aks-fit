@@ -7,20 +7,21 @@ import styles from './AboutSection.module.scss';
 
 export function AboutSection() {
   const titleRef = useRef<HTMLHeadingElement>(null);
+  const ctaRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
-    const el = titleRef.current;
-    if (!el) return;
+    const els = [titleRef.current, ctaRef.current];
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          el.classList.add(styles.visible);
-          observer.disconnect();
-        }
-      },
+      entries =>
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add(styles.visible);
+            observer.unobserve(e.target);
+          }
+        }),
       { threshold: 0.5 }
     );
-    observer.observe(el);
+    els.forEach(el => el && observer.observe(el));
     return () => observer.disconnect();
   }, []);
 
@@ -47,9 +48,14 @@ export function AboutSection() {
           привычки, образ жизни и цели, чтобы вместе мы пришли к результату, который останется с
           тобой навсегда.
         </p>
-        <p className={styles.aboutCta}>Я здесь, чтобы изменить твою жизнь к лучшему. Начнем?</p>
+        <p className={styles.aboutCta}>
+          Я здесь, чтобы изменить твою жизнь к лучшему.{' '}
+          <span ref={ctaRef} className={styles.ctaHighlight}>
+            Начнем?
+          </span>
+        </p>
         <div className={styles.aboutButton}>
-          <Button>Заказать консультацию</Button>
+          <Button animated>Заказать консультацию</Button>
         </div>
       </div>
     </section>
