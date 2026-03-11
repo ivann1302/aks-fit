@@ -13,13 +13,10 @@ export function ServicesSection() {
       <div className={styles.cards}>
         {SERVICES.map(({ title, image, back }) => (
           <div className={styles.card} key={title}>
-            <div className={styles.cardInner}>
-              <div className={styles.cardFront}>
-                <div className={styles.cardImage} style={{ backgroundImage: `url('${image}')` }} />
-              </div>
-              <div className={styles.cardBack}>
-                <p>{back}</p>
-              </div>
+            <div className={styles.cardImage} style={{ backgroundImage: `url('${image}')` }} />
+            <div className={styles.cardOverlay}>
+              <h3 className={styles.cardTitle}>{title}</h3>
+              <p>{back}</p>
             </div>
           </div>
         ))}

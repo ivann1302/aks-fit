@@ -1,7 +1,7 @@
 @use '../../../styles/variables' as *;
 
 .about {
-  background: $color-accent;
+  background: $color-primary;
   position: relative;
   z-index: 1;
   padding: 100px 60px;
@@ -14,11 +14,21 @@
   width: 100%;
 }
 
+.helloIcon {
+  display: block;
+  width: max-content;
+  position: relative;
+  left: -70px;
+  top: 40px;
+  color: transparent;
+  object-fit: contain;
+}
+
 .aboutTitle {
   font-family: $font-playfair;
   font-size: clamp(28px, 3.5vw, 52px);
   font-style: italic;
-  color: $color-primary;
+  color: $color-text;
   margin-bottom: 48px;
   line-height: 1.2;
   width: fit-content;
@@ -28,7 +38,7 @@
     display: block;
     width: 100%;
     height: 2px;
-    background: $color-primary;
+    background: $color-accent;
     margin-top: 20px;
     transform: scaleX(0);
     transform-origin: left;
@@ -43,7 +53,7 @@
 .aboutParagraph {
   font-size: clamp(15px, 1.4vw, 18px);
   line-height: 1.9;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(64, 62, 59, 0.8);
   margin-bottom: 24px;
   font-family: $font-playfair;
 }
@@ -52,7 +62,7 @@
   font-family: $font-playfair;
   font-size: clamp(18px, 2vw, 24px);
   font-style: italic;
-  color: $color-primary;
+  color: $color-text;
   margin-top: 16px;
   line-height: 1.6;
 }

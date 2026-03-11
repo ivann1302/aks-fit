@@ -40,7 +40,7 @@
   cursor: pointer;
   display: block;
   font-family: $font-playfair;
-  font-size: clamp(15px, 1.5vw, 18px);
+  font-size: clamp(18px, 1.5vw, 26px);
   font-weight: 700;
   color: $color-text;
   padding: 24px 40px 24px 0;
@@ -84,7 +84,7 @@
 
   p {
     font-family: $font-playfair;
-    font-size: clamp(14px, 1.3vw, 16px);
+    font-size: clamp(16px, 1.3vw, 22px);
     line-height: 1.8;
     color: rgba(64, 62, 59, 0.85);
   }

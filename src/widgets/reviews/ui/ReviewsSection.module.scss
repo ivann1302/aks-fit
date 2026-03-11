@@ -19,108 +19,117 @@
   font-style: italic;
 }
 
-.carousel {
+.sliderRow {
   width: 100%;
+  max-width: 1300px;
+  padding: 0 24px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
-.carouselTrack {
-  position: relative;
-  height: 480px;
-  overflow: hidden;
+/* scroll-snap: браузер сам "защёлкивает" карточки при прокрутке */
+.sliderTrack {
+  display: flex;
+  gap: 40px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
 
-  @media (max-width: $bp-mobile) {
-    height: 580px;
+  /* скрываем полосу прокрутки */
+  &::-webkit-scrollbar {
+    display: none;
   }
+  scrollbar-width: none;
 }
 
-.carouselItem {
-  position: absolute;
-  top: 0;
-  left: 33.33%;
-  width: 33.33%;
-  padding: 30px 20px 0;
-  transition:
-    transform 0.3s ease-in-out,
-    opacity 0.3s ease-in-out;
+.card {
+  flex-shrink: 0;
+  width: calc((100% - 80px) / 3);
+  min-height: 420px;
+  scroll-snap-align: start;
+  border: 1px solid $color-accent;
+  border-radius: 12px;
+  background: transparent;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 
   @media (max-width: $bp-mobile) {
-    left: 0;
     width: 100%;
   }
 }
 
-.shadowEffect {
-  background: #fff;
-  padding: 32px 24px;
-  border-radius: 4px;
-  text-align: center;
-  border: 1px solid rgba(64, 62, 59, 0.2);
-  box-shadow:
-    0 19px 38px rgba(0, 0, 0, 0.1),
-    0 15px 12px rgba(0, 0, 0, 0.02);
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
-.testimonialAvatar {
-  width: 90px;
-  height: 90px;
+.avatar {
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  margin: 0 auto 17px;
   background: $color-accent;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
+  font-size: 20px;
   font-family: $font-playfair;
-  color: #fff;
   font-style: italic;
+  color: #fff;
+  flex-shrink: 0;
 }
 
-.testimonialText {
-  font-size: 18px;
-  line-height: 1.6;
-  margin: 0 0 17px;
-  font-weight: 300;
+.name {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   color: $color-text;
 }
 
-.testimonialName {
-  margin: -17px auto 0;
-  display: table;
-  width: auto;
-  background: $color-accent;
-  padding: 9px 35px;
-  border-radius: 12px;
-  text-align: center;
-  color: #fff;
-  box-shadow:
-    0 9px 18px rgba(0, 0, 0, 0.12),
-    0 5px 7px rgba(0, 0, 0, 0.05);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+.text {
+  font-size: clamp(14px, 1.3vw, 16px);
+  line-height: 1.7;
+  font-weight: 300;
+  color: $color-text;
+  margin: 0;
 }
 
-.dots {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 40px;
-}
-
-.dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: rgba(64, 62, 59, 0.25);
+.btn {
+  width: 32px;
+  height: 32px;
   border: none;
+  background: transparent;
   cursor: pointer;
   padding: 0;
-  transform: scale(0.8);
-  transition: all 250ms ease-out;
-}
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 
-.dotActive {
-  background: $color-accent;
-  transform: scale(1.2);
+  &::before {
+    content: '';
+    display: block;
+    width: 14px;
+    height: 14px;
+    border-right: 2px solid $color-accent;
+    border-bottom: 2px solid $color-accent;
+    transition: border-color 0.2s;
+  }
+
+  &:first-child::before {
+    transform: rotate(135deg);
+  }
+
+  &:last-child::before {
+    transform: rotate(-45deg);
+  }
+
+  &:hover::before {
+    border-color: $color-accent-hover;
+  }
 }

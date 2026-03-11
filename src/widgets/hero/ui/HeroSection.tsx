@@ -7,17 +7,13 @@ interface HeroSectionProps {
 export function HeroSection({ heroRef }: HeroSectionProps) {
   return (
     <section className={styles.hero} ref={heroRef as React.RefObject<HTMLElement>}>
-      <h1 className={styles.heroTitle}>
-        {['Тренировки.', 'Питание.', 'Результат.'].map((word, i) => (
-          <span
-            key={word}
-            className={styles.heroWord}
-            style={{ animationDelay: `${0.4 + i * 0.55}s` }}
-          >
-            {word}
-          </span>
-        ))}
-      </h1>
+      <div className={styles.heroContent}>
+        <h1 className={styles.heroTitle}>ПЕРСОНАЛЬНЫЙ ОНЛАЙН ТРЕНЕР</h1>
+        <div className={styles.heroBottom}>
+          <hr className={styles.heroDivider} />
+          <p className={styles.heroSlogan}>Твой путь к телу мечты через удовольствие и комфорт</p>
+        </div>
+      </div>
       <div className={styles.scrollIndicator}>
         <span />
         <span />

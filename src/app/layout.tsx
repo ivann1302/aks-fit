@@ -1,22 +1,18 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono, Cormorant_Garamond } from 'next/font/google';
+import { Cardo, Rubik } from 'next/font/google';
 import '@/styles/globals.scss';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const cardo = Cardo({
+  variable: '--font-cardo',
   subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
-
-const playfair = Cormorant_Garamond({
-  variable: '--font-playfair',
-  subsets: ['latin', 'cyrillic'],
   style: ['normal', 'italic'],
-  weight: ['400', '500', '600', '700'],
+  weight: ['400', '700'],
+});
+
+const rubik = Rubik({
+  variable: '--font-rubik',
+  subsets: ['latin', 'cyrillic'],
+  weight: ['400', '700'],
 });
 
 export const metadata: Metadata = {
@@ -31,9 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable}`}>
-        {children}
-      </body>
+      <body className={`${cardo.variable} ${rubik.variable}`}>{children}</body>
     </html>
   );
 }

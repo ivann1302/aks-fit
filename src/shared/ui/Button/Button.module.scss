@@ -8,20 +8,19 @@
   height: 55px;
   padding: 0 40px;
   border: none;
-  border-radius: 50px;
+  border-radius: 20px;
   cursor: pointer;
   font-family: $font-playfair;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
   font-style: italic;
   color: #fff;
-  letter-spacing: 0.08em;
-  transition: box-shadow 0.3s ease;
+  letter-spacing: 0.06em;
+  background-color: $color-accent;
+  transition: background-color 0.2s ease;
 
   &:hover {
-    box-shadow:
-      0 0 0 2px #fff,
-      0 0 0 4px #ed6ea0;
+    background-color: $color-accent-hover;
   }
 
   &:focus {
@@ -31,26 +30,5 @@
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
-    transform: none;
-  }
-}
-
-.primary {
-  background-image: linear-gradient(to right, #ed6ea0, $color-primary);
-  box-shadow: 0 4px 15px 0 rgba(236, 116, 149, 0.75);
-}
-
-.outline {
-  background-image: none;
-  background-color: transparent;
-  box-shadow: none;
-  border: 2px solid #ed6ea0;
-  color: #ed6ea0;
-
-  &:hover {
-    background-image: linear-gradient(to right, #ed6ea0, $color-primary);
-    color: #fff;
-    border-color: transparent;
-    box-shadow: 0 4px 15px 0 rgba(236, 116, 149, 0.75);
   }
 }

@@ -13,37 +13,43 @@
   transition: all 0.4s cubic-bezier(0, 0, 0, 1);
 }
 
-.heroTitle {
-  font-size: clamp(28px, 5vw, 72px);
-  font-weight: 400;
-  font-family: $font-playfair;
-  font-style: italic;
-  text-align: center;
-  letter-spacing: 0.12em;
-  line-height: 1.4;
-  padding: 0 40px;
+.heroContent {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0 0.3em;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 0 40px;
+  text-align: center;
 }
 
-.heroWord {
-  display: inline-block;
+.heroTitle {
+  font-size: clamp(24px, 4.5vw, 64px);
+  font-weight: 700;
+  font-family: $font-playfair;
+  letter-spacing: 0.18em;
   color: #fff;
-  opacity: 0;
-  animation: wordAppear 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  margin: 0;
 }
 
-@keyframes wordAppear {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.heroBottom {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.heroDivider {
+  width: 100%;
+  border: none;
+  border-top: 2px solid #d9304f;
+  margin: 0;
+}
+
+.heroSlogan {
+  font-size: clamp(14px, 1.8vw, 22px);
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
 }
 
 .scrollIndicator {

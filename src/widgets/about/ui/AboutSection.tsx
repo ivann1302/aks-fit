@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { Button } from '@/shared/ui';
 import styles from './AboutSection.module.scss';
 
@@ -26,6 +27,13 @@ export function AboutSection() {
   return (
     <section className={styles.about}>
       <div className={styles.aboutInner}>
+        <Image
+          src="/images/hello.png"
+          alt=""
+          width={140}
+          height={140}
+          className={styles.helloIcon}
+        />
         <h2 className={styles.aboutTitle} ref={titleRef}>
           Меня зовут Татьяна Аксенова
         </h2>

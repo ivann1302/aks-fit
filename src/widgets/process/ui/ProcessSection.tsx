@@ -88,17 +88,30 @@ const DESCRIPTIONS: Record<string, string> = {
 export function ProcessSection() {
   return (
     <section className={styles.process}>
-      <h2 className={styles.title}>Как мы будем с тобой работать?</h2>
-      <div className={styles.steps}>
-        {STEPS.map(step => (
-          <div key={step.title} className={styles.step}>
-            <div className={styles.icon}>{step.icon}</div>
-            <div className={styles.content}>
-              <h3 className={styles.stepTitle}>{step.title}</h3>
-              <p className={styles.stepDescription}>{DESCRIPTIONS[step.title]}</p>
-            </div>
+      <div className={styles.phoneWrapper}>
+        <Image
+          src="/images/phone.png"
+          alt="Телефон"
+          width={620}
+          height={1240}
+          className={styles.phone}
+        />
+      </div>
+      <div className={styles.layout}>
+        <div className={styles.right}>
+          <h2 className={styles.title}>Как мы будем с тобой работать?</h2>
+          <div className={styles.inner}>
+            {STEPS.map(step => (
+              <div key={step.title} className={styles.step}>
+                <div className={styles.icon}>{step.icon}</div>
+                <div className={styles.content}>
+                  <h3 className={styles.stepTitle}>{step.title}</h3>
+                  <p className={styles.stepDescription}>{DESCRIPTIONS[step.title]}</p>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
       </div>
     </section>
   );

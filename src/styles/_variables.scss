@@ -1,9 +1,15 @@
-$color-primary: #edcab2;
+$color-primary: #faecd6;
+$color-button: #1120f0;
+$color-button-hover: #0d19c0;
 $color-accent: #d9304f;
+$color-accent-hover: #b1494f;
+$color-header-footer: #542d30;
 $color-text: #403e3b;
 
 $bp-mobile: 767px;
 $bp-tablet: 1199px;
 $bp-desktop: 1200px;
 
-$font-playfair: var(--font-playfair), serif;
+$font-cardo: var(--font-cardo), serif;
+$font-playfair: $font-cardo; // alias для обратной совместимости
+$font-rubik: var(--font-rubik), sans-serif;

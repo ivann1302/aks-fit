@@ -20,7 +20,7 @@ export function Header({ headerRef, alwaysVisible = false }: HeaderProps) {
     <header className={headerClass} ref={headerRef as React.RefObject<HTMLElement>}>
       <nav className={styles.nav}>
         <Link href="/" className={styles.logo}>
-          AKS Fit
+          Aksenova fitness
         </Link>
         <button
           className={`${styles.burger} ${menuOpen ? styles.burgerOpen : ''}`}

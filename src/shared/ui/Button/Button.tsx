@@ -1,12 +1,10 @@
 import { ButtonHTMLAttributes } from 'react';
 import styles from './Button.module.scss';
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'outline';
-}
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement>;
 
-export function Button({ children, variant = 'primary', className, ...rest }: ButtonProps) {
-  const cls = [styles.button, styles[variant], className].filter(Boolean).join(' ');
+export function Button({ children, className, ...rest }: ButtonProps) {
+  const cls = [styles.button, className].filter(Boolean).join(' ');
   return (
     <button className={cls} {...rest}>
       {children}
