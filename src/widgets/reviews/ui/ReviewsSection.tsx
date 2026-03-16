@@ -16,7 +16,7 @@ export function ReviewsSection() {
   };
 
   return (
-    <section className={styles.reviews}>
+    <section id="reviews" className={styles.reviews}>
       <Image
         src="/images/reviews.png"
         alt=""

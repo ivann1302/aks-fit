@@ -1,0 +1,171 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.section {
+  background: $color-primary;
+  padding: 80px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+
+  @include mobile {
+    padding: 60px 0;
+    gap: 32px;
+  }
+}
+
+// ── Head ────────────────────────────────────────────────────────────────────
+
+.headText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  padding: 0 60px;
+
+  @include mobile {
+    padding: 0 20px;
+  }
+}
+
+.eyebrow {
+  font-family: $font-rubik;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: $color-accent;
+}
+
+.title {
+  font-family: $font-playfair;
+  font-size: clamp(28px, 3.5vw, 44px);
+  font-style: italic;
+  color: $color-text;
+  margin: 0;
+}
+
+.subtitle {
+  font-family: $font-rubik;
+  font-size: clamp(14px, 1.3vw, 17px);
+  font-weight: 300;
+  color: rgba(64, 62, 59, 0.6);
+  margin: 0;
+}
+
+.allLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border: 2px solid $color-accent;
+  border-radius: 20px;
+  font-family: $font-rubik;
+  font-size: 15px;
+  font-weight: 600;
+  color: $color-accent;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition:
+    background 0.25s ease,
+    color 0.25s ease;
+
+  &:hover {
+    background: $color-accent;
+    color: #fff;
+  }
+}
+
+// ── CTA ─────────────────────────────────────────────────────────────────────
+
+// ── Slider ──────────────────────────────────────────────────────────────────
+
+.sliderRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 60px;
+
+  @include mobile {
+    padding: 0 20px;
+    gap: 12px;
+  }
+}
+
+.track {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  flex: 1;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  scrollbar-width: none;
+}
+
+.slide {
+  flex-shrink: 0;
+  // desktop: 3 карточки минус 2 gap
+  width: calc((100% - 48px) / 3);
+  scroll-snap-align: start;
+
+  @include mobile {
+    width: 100%;
+  }
+}
+
+// ── Arrows (те же, что в ReviewsSection) ────────────────────────────────────
+
+.btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  &::before {
+    content: '';
+    display: block;
+    width: 14px;
+    height: 14px;
+    border-right: 2px solid $color-accent;
+    border-bottom: 2px solid $color-accent;
+    transition: border-color 0.2s;
+  }
+
+  &:first-of-type::before {
+    transform: rotate(135deg);
+  }
+
+  &:last-of-type::before {
+    transform: rotate(-45deg);
+  }
+
+  &:hover::before {
+    border-color: $color-accent-hover;
+  }
+}
+
+// ── CTA ─────────────────────────────────────────────────────────────────────
+
+.ctaRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 0 60px;
+
+  @include mobile {
+    padding: 0 20px;
+  }
+}

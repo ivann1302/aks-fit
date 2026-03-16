@@ -18,7 +18,7 @@ export function ServicesSection() {
   }, []);
 
   return (
-    <section className={styles.content}>
+    <section id="services" className={styles.content}>
       <p className={styles.contentText}>
         Хочешь выглядеть на 100% и чувствовать себя невероятно? Я приглашаю тебя в мир, где женский
         фитнес приносит радость и быстрые результаты. Присоединяйся ко мне, чтобы получить доступ к
@@ -31,7 +31,6 @@ export function ServicesSection() {
             <div className={styles.cardImage} style={{ backgroundImage: `url('${image}')` }} />
             <div className={styles.cardOverlay}>
               <h3 className={styles.cardTitle}>{title}</h3>
-              <hr className={styles.cardDivider} />
               <p>{back}</p>
             </div>
           </div>

@@ -1,191 +1,268 @@
-@use '@/styles/variables' as *;
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
 
-.pricing {
+.section {
   background: $color-primary;
-  position: relative;
-  z-index: 1;
-  padding: 60px 60px 0px;
-}
-
-.inner {
-  max-width: 1440px;
-  margin: 0 auto;
-}
-
-.container {
-  background: $color-primary;
-  border-radius: 24px;
-  padding: 20px;
+  padding: 80px 60px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  align-items: center;
+  gap: 56px;
+
+  @include mobile {
+    padding: 60px 20px;
+    gap: 40px;
+  }
 }
 
-.topRow {
-  display: grid;
-  grid-template-columns: 1.7fr 1fr;
-  gap: 16px;
-}
+// ── Header ──────────────────────────────────────────────────────────────────
 
-.cardLeft,
-.cardRight,
-.cardBottom {
-  background: $color-accent;
-  border-radius: 12px;
-  color: #fff;
-}
-
-.cardLeft {
-  padding: 40px 36px;
+.head {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.eyebrow {
+  font-family: $font-rubik;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: $color-accent;
 }
 
 .title {
-  font-family: $font-cardo;
-  font-size: clamp(28px, 3vw, 42px);
-  font-weight: 700;
-  line-height: 1.2;
+  font-family: $font-playfair;
+  font-size: clamp(28px, 3.5vw, 48px);
+  font-style: italic;
+  color: $color-text;
+  margin: 0;
 }
 
-.price {
+.subtitle {
   font-family: $font-rubik;
-  font-size: clamp(23px, 2.5vw, 38px);
-  font-weight: 600;
+  font-size: clamp(14px, 1.3vw, 17px);
+  font-weight: 300;
+  color: rgba(64, 62, 59, 0.6);
+  max-width: 560px;
+  margin: 0;
 }
 
-.list {
+// ── Grid ────────────────────────────────────────────────────────────────────
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  width: 100%;
+  align-items: stretch;
+
+  @include tablet-and-below {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+  }
+}
+
+// ── Card ────────────────────────────────────────────────────────────────────
+
+.card {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  background: darken($color-primary, 6%);
+  border-radius: 24px;
+  overflow: hidden;
+}
 
-  li {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-family: $font-rubik;
-    font-size: clamp(14px, 1.2vw, 17px);
-    line-height: 1.4;
+.cardDark {
+  background: $color-text;
 
-    &::before {
-      content: '';
-      flex-shrink: 0;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: $color-accent;
-      box-shadow: inset 0 0 0 4px $color-primary;
+  .label {
+    color: $color-primary;
+    background: rgba($color-primary, 0.12);
+  }
+  .price {
+    color: $color-primary;
+  }
+  .per {
+    color: rgba($color-primary, 0.5);
+  }
+  .desc {
+    color: rgba($color-primary, 0.7);
+  }
+  .divider {
+    background: rgba($color-primary, 0.12);
+  }
+
+  .features li {
+    color: $color-primary;
+  }
+
+  .btn {
+    background: $color-accent;
+    color: #fff;
+
+    &:hover {
+      background: $color-accent-hover;
     }
   }
 }
 
-.description {
-  padding-top: 60px;
-  font-family: $font-rubik;
-  font-size: clamp(19px, 1.2vw, 28px);
-  line-height: 1.6;
-  opacity: 0.9;
+.badgeRow {
+  display: flex;
+  justify-content: flex-end;
+  padding: 14px 32px 0;
 }
 
-.cardRight {
+.badge {
+  font-family: $font-rubik;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  background: $color-accent;
+  padding: 6px 16px;
+  border-radius: 20px;
+}
+
+.cardTop {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  font-size: clamp(16px, 1.2vw, 22px);
+  gap: 20px;
+  padding: 28px 32px 32px;
 }
 
-.imageWrapper {
-  position: relative;
-  flex: 1;
-  min-height: 220px;
+// когда нет badge — стандартный верхний отступ
+.card:not(:has(.badgeRow)) .cardTop {
+  padding-top: 36px;
 }
 
-.image {
-  object-fit: cover;
-  object-position: top;
-}
-
-.imageCaption {
+.label {
+  display: inline-flex;
+  align-self: flex-start;
   font-family: $font-rubik;
-  font-size: clamp(19px, 1.2vw, 28px);
-  text-align: center;
-  padding: 14px 16px;
-  opacity: 0.9;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: $color-text;
+  background: rgba($color-text, 0.1);
+  padding: 6px 16px;
+  border-radius: 20px;
 }
 
-.cardBottom {
-  padding: 28px 36px;
+.priceRow {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
 }
 
-.bottomText {
+.price {
+  font-family: $font-playfair;
+  font-size: clamp(32px, 3vw, 42px);
+  font-style: italic;
+  color: $color-text;
+}
+
+.per {
   font-family: $font-rubik;
-  font-size: clamp(17px, 1.4vw, 23px);
+  font-size: 14px;
+  font-weight: 300;
+  color: rgba(64, 62, 59, 0.5);
+}
+
+.desc {
+  font-family: $font-rubik;
+  font-size: 14px;
+  font-weight: 300;
   line-height: 1.6;
-  text-align: center;
+  color: rgba(64, 62, 59, 0.6);
+  margin: 0;
 }
+
+.divider {
+  height: 1px;
+  background: rgba($color-text, 0.1);
+  flex-shrink: 0;
+}
+
+// ── Card body ───────────────────────────────────────────────────────────────
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+  padding: 28px 32px 36px;
+  gap: 24px;
+}
+
+.features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: $font-rubik;
+    font-size: 14px;
+    color: $color-text;
+  }
+}
+
+.dot {
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: $color-accent;
+}
+
+// ── Button ──────────────────────────────────────────────────────────────────
+
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 52px;
+  border-radius: 16px;
+  font-family: $font-rubik;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  background: rgba($color-accent, 0.1);
+  color: $color-accent;
+  transition:
+    background 0.25s ease,
+    color 0.25s ease;
+
+  &:hover {
+    background: $color-accent;
+    color: #fff;
+  }
+}
+
+// ── Note ────────────────────────────────────────────────────────────────────
 
 .note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-family: $font-rubik;
-  font-size: clamp(19px, 1.2vw, 28px);
-  color: $color-text;
-  opacity: 0.7;
-  text-align: center;
-  margin-top: 20px;
+  font-size: 14px;
+  font-weight: 300;
+  color: rgba(64, 62, 59, 0.55);
+  margin: 0;
 }
 
-// Анимации появления
-.slideLeft {
-  opacity: 0;
-  transform: translateX(-60px);
-  transition:
-    opacity 0.7s ease,
-    transform 0.7s ease;
-}
-
-.slideRight {
-  opacity: 0;
-  transform: translateX(60px);
-  transition:
-    opacity 0.7s ease,
-    transform 0.7s ease;
-  transition-delay: 0.1s;
-}
-
-.slideUp {
-  opacity: 0;
-  transform: translateY(60px);
-  transition:
-    opacity 0.7s ease,
-    transform 0.7s ease;
-  transition-delay: 0.2s;
-}
-
-.visible {
-  opacity: 1;
-  transform: translate(0);
-}
-
-// Мобильная версия: три блока вертикально
-@media (max-width: $bp-mobile) {
-  .pricing {
-    padding: 0 24px 0;
-    z-index: 2;
-  }
-
-  .topRow {
-    grid-template-columns: 1fr;
-  }
-
-  .cardLeft {
-    padding: 28px 24px;
-  }
-
-  .imageWrapper {
-    min-height: 280px;
-  }
-
-  .cardBottom {
-    padding: 24px 20px;
-  }
+.noteStar {
+  color: $color-accent;
+  font-size: 12px;
 }

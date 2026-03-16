@@ -51,6 +51,30 @@
   }
 }
 
+.fieldWrap {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.inputError {
+  border-color: #e05555 !important;
+}
+
+.error {
+  font-size: 13px;
+  color: #ff7f7f;
+  padding-left: 16px;
+}
+
+.success {
+  color: $color-accent;
+  font-size: 20px;
+  text-align: center;
+  font-family: $font-playfair;
+}
+
 .input {
   width: 100%;
   height: 55px;

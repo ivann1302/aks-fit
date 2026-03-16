@@ -1,35 +1,33 @@
 'use client';
 
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
 import { Button } from '@/shared/ui';
 import {
   ACTIVITY_LEVELS,
   GOAL_DELTA,
+  calculatorSchema,
   type CalculatorFormData,
+  type CalculatorFormRaw,
   type CalculatorResult,
   type Goal,
 } from '../model';
 import styles from './CalculatorSection.module.scss';
 
-const INITIAL_FORM: CalculatorFormData = {
-  gender: 'male',
-  age: '',
-  weight: '',
-  height: '',
-  activity: 1,
-  goal: 'maintain',
-};
+const GOALS: { value: Goal; label: string }[] = [
+  { value: 'lose', label: 'Снижение веса' },
+  { value: 'maintain', label: 'Поддержание веса' },
+  { value: 'gain', label: 'Набор веса' },
+];
 
 function calcCalories(data: CalculatorFormData): CalculatorResult {
-  const age = Number(data.age);
-  const weight = Number(data.weight);
-  const height = Number(data.height);
   const kfa = ACTIVITY_LEVELS.find(l => l.value === data.activity)!.kfa;
 
   const bmr =
     data.gender === 'male'
-      ? 10 * weight + 6.25 * height - 5 * age + 5
-      : 10 * weight + 6.25 * height - 5 * age - 161;
+      ? 10 * data.weight + 6.25 * data.height - 5 * data.age + 5
+      : 10 * data.weight + 6.25 * data.height - 5 * data.age - 161;
 
   const tdee = bmr * kfa;
   const target = tdee + GOAL_DELTA[data.goal];
@@ -37,228 +35,223 @@ function calcCalories(data: CalculatorFormData): CalculatorResult {
   return { bmr: Math.round(bmr), tdee: Math.round(tdee), target: Math.round(target) };
 }
 
-export function CalculatorSection() {
-  const [form, setForm] = useState<CalculatorFormData>(INITIAL_FORM);
-  const [result, setResult] = useState<CalculatorResult | null>(null);
+interface Props {
+  onResult?: (result: CalculatorResult, form: CalculatorFormData) => void;
+}
 
-  const currentActivity = ACTIVITY_LEVELS.find(l => l.value === form.activity)!;
+export function CalculatorSection({ onResult }: Props) {
+  const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setResult(calcCalories(form));
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+    // CalculatorFormRaw — строки из HTML-инпутов, CalculatorFormData — числа после валидации
+  } = useForm<CalculatorFormRaw, unknown, CalculatorFormData>({
+    resolver: standardSchemaResolver(calculatorSchema),
+    defaultValues: {
+      gender: 'male',
+      age: '',
+      weight: '',
+      height: '',
+      activity: '1',
+      goal: 'maintain',
+    },
+  });
+
+  // eslint-disable-next-line react-hooks/incompatible-library
+  const gender = watch('gender');
+
+  const onSubmit = (data: CalculatorFormData) => {
+    const result = calcCalories(data);
+    setSubmitted(true);
+    onResult?.(result, data);
   };
 
   return (
-    <section className={styles.calculator}>
-      <div className={styles.inner}>
-        <h2 className={styles.title}>Калькулятор калорий</h2>
-        <p className={styles.description}>
-          Рассчитайте свою суточную норму калорий по формуле Миффлина–Сан Жеора — одной из наиболее
-          точных формул для определения базового обмена веществ. Укажите свои параметры, уровень
-          активности и цель, и получите персональную рекомендацию.
+    <section className={styles.section}>
+      <div className={styles.sectionHead}>
+        <h2 className={styles.sectionTitle}>Узнайте свои параметры</h2>
+        <p className={styles.sectionSubtitle}>
+          Заполните данные — и получите персональные рекомендации за 2 минуты
         </p>
+      </div>
 
-        <form className={styles.form} onSubmit={handleSubmit}>
-          {/* Общая информация */}
-          <fieldset className={styles.fieldset}>
-            <legend className={styles.legend}>Общая информация</legend>
+      <form className={styles.card} onSubmit={handleSubmit(onSubmit)}>
+        {/* Прогресс-бар */}
+        <div className={styles.progressBar}>
+          <div className={styles.progressFilled} />
+          <div className={styles.progressEmpty} />
+          <div className={styles.progressEmpty} />
+        </div>
 
+        <div className={styles.cardInner}>
+          {/* Шаг */}
+          <div className={styles.stepRow}>
+            <span className={styles.stepLabel}>Шаг 1 из 3</span>
+            <span className={styles.stepName}>Личные данные</span>
+          </div>
+
+          {/* Пол */}
+          <div className={styles.field}>
+            <span className={styles.fieldLabel}>Ваш пол</span>
             <div className={styles.genderRow}>
               <label
-                className={`${styles.genderLabel} ${form.gender === 'male' ? styles.genderLabelActive : ''}`}
+                className={`${styles.genderBtn} ${gender === 'male' ? styles.genderBtnActive : ''}`}
               >
                 <input
                   type="radio"
-                  name="gender"
                   value="male"
-                  checked={form.gender === 'male'}
-                  onChange={() => setForm({ ...form, gender: 'male' })}
+                  {...register('gender')}
                   className={styles.hiddenInput}
                 />
-                Мужчина
+                Мужской
               </label>
               <label
-                className={`${styles.genderLabel} ${form.gender === 'female' ? styles.genderLabelActive : ''}`}
+                className={`${styles.genderBtn} ${gender === 'female' ? styles.genderBtnActive : ''}`}
               >
                 <input
                   type="radio"
-                  name="gender"
                   value="female"
-                  checked={form.gender === 'female'}
-                  onChange={() => setForm({ ...form, gender: 'female' })}
+                  {...register('gender')}
                   className={styles.hiddenInput}
                 />
-                Женщина
+                Женский
               </label>
             </div>
+          </div>
 
-            <div className={styles.fieldsRow}>
-              <div className={styles.field}>
-                <label className={styles.fieldLabel} htmlFor="age">
-                  Возраст
-                </label>
-                <div className={styles.inputWrapper}>
-                  <input
-                    id="age"
-                    type="number"
-                    min={13}
-                    max={80}
-                    placeholder="30"
-                    value={form.age}
-                    onChange={e => setForm({ ...form, age: e.target.value })}
-                    className={styles.input}
-                    required
-                  />
-                  <span className={styles.unit}>лет</span>
-                </div>
-              </div>
-
-              <div className={styles.field}>
-                <label className={styles.fieldLabel} htmlFor="weight">
-                  Вес
-                </label>
-                <div className={styles.inputWrapper}>
-                  <input
-                    id="weight"
-                    type="number"
-                    min={30}
-                    max={300}
-                    placeholder="70"
-                    value={form.weight}
-                    onChange={e => setForm({ ...form, weight: e.target.value })}
-                    className={styles.input}
-                    required
-                  />
-                  <span className={styles.unit}>кг</span>
-                </div>
-              </div>
-
-              <div className={styles.field}>
-                <label className={styles.fieldLabel} htmlFor="height">
-                  Рост
-                </label>
-                <div className={styles.inputWrapper}>
-                  <input
-                    id="height"
-                    type="number"
-                    min={100}
-                    max={250}
-                    placeholder="175"
-                    value={form.height}
-                    onChange={e => setForm({ ...form, height: e.target.value })}
-                    className={styles.input}
-                    required
-                  />
-                  <span className={styles.unit}>см</span>
-                </div>
-              </div>
-            </div>
-          </fieldset>
-
-          {/* Дневная активность */}
-          <fieldset className={styles.fieldset}>
-            <legend className={styles.legend}>Дневная активность</legend>
-
-            <div className={styles.sliderWrapper}>
-              <div className={styles.sliderTrackWrapper}>
-                <div
-                  className={styles.sliderFill}
-                  style={{ width: `${((form.activity - 1) / 4) * 100}%` }}
-                />
+          {/* Возраст + Цель */}
+          <div className={styles.fieldsRow}>
+            <div className={styles.field}>
+              <label className={styles.fieldLabel} htmlFor="age">
+                Возраст
+              </label>
+              <div className={styles.inputWrapper}>
                 <input
-                  type="range"
-                  min={1}
-                  max={5}
-                  step={1}
-                  value={form.activity}
-                  onChange={e => setForm({ ...form, activity: Number(e.target.value) })}
-                  className={styles.slider}
+                  id="age"
+                  type="number"
+                  placeholder="28"
+                  {...register('age')}
+                  className={`${styles.input} ${errors.age ? styles.inputError : ''}`}
                 />
+                <span className={styles.unit}>лет</span>
               </div>
-
-              <div className={styles.sliderSteps}>
-                {ACTIVITY_LEVELS.map(level => (
-                  <button
-                    key={level.value}
-                    type="button"
-                    className={`${styles.sliderStep} ${form.activity === level.value ? styles.sliderStepActive : ''}`}
-                    onClick={() => setForm({ ...form, activity: level.value })}
-                  >
-                    {level.value}
-                  </button>
-                ))}
-              </div>
+              {errors.age && <span className={styles.error}>{errors.age.message}</span>}
             </div>
 
-            <div className={styles.activityInfo}>
-              <span className={styles.activityLabel}>{currentActivity.label}</span>
-              <span className={styles.activityDesc}>{currentActivity.description}</span>
-              <span className={styles.activityKfa}>КФА: {currentActivity.kfa}</span>
-            </div>
-          </fieldset>
-
-          {/* Цель */}
-          <fieldset className={styles.fieldset}>
-            <legend className={styles.legend}>Цель</legend>
-
-            <div className={styles.goalsRow}>
-              {(
-                [
-                  { value: 'lose', label: 'Сбросить вес', sub: '−500 ккал' },
-                  { value: 'maintain', label: 'Поддерживать вес', sub: '0 ккал' },
-                  { value: 'gain', label: 'Набрать вес', sub: '+500 ккал' },
-                ] as { value: Goal; label: string; sub: string }[]
-              ).map(({ value, label, sub }) => (
-                <label
-                  key={value}
-                  className={`${styles.goalCard} ${form.goal === value ? styles.goalCardActive : ''}`}
+            <div className={styles.field}>
+              <label className={styles.fieldLabel} htmlFor="goal">
+                Цель
+              </label>
+              <div className={styles.selectWrapper}>
+                <select id="goal" {...register('goal')} className={styles.select}>
+                  {GOALS.map(g => (
+                    <option key={g.value} value={g.value}>
+                      {g.label}
+                    </option>
+                  ))}
+                </select>
+                <svg
+                  className={styles.chevron}
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
                 >
-                  <input
-                    type="radio"
-                    name="goal"
-                    value={value}
-                    checked={form.goal === value}
-                    onChange={() => setForm({ ...form, goal: value })}
-                    className={styles.hiddenInput}
+                  <polyline
+                    points="6,9 12,15 18,9"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
-                  <span className={styles.goalLabel}>{label}</span>
-                  <span className={styles.goalSub}>{sub}</span>
-                </label>
-              ))}
+                </svg>
+              </div>
             </div>
-          </fieldset>
+          </div>
 
-          <div className={styles.submitRow}>
-            <Button animated type="submit">
+          {/* Рост + Вес + Активность */}
+          <div className={styles.fieldsRow}>
+            <div className={styles.field}>
+              <label className={styles.fieldLabel} htmlFor="height">
+                Рост
+              </label>
+              <div className={styles.inputWrapper}>
+                <input
+                  id="height"
+                  type="number"
+                  placeholder="175"
+                  {...register('height')}
+                  className={`${styles.input} ${errors.height ? styles.inputError : ''}`}
+                />
+                <span className={styles.unit}>см</span>
+              </div>
+              {errors.height && <span className={styles.error}>{errors.height.message}</span>}
+            </div>
+
+            <div className={styles.field}>
+              <label className={styles.fieldLabel} htmlFor="weight">
+                Вес
+              </label>
+              <div className={styles.inputWrapper}>
+                <input
+                  id="weight"
+                  type="number"
+                  placeholder="70"
+                  {...register('weight')}
+                  className={`${styles.input} ${errors.weight ? styles.inputError : ''}`}
+                />
+                <span className={styles.unit}>кг</span>
+              </div>
+              {errors.weight && <span className={styles.error}>{errors.weight.message}</span>}
+            </div>
+
+            <div className={styles.field}>
+              <label className={styles.fieldLabel} htmlFor="activity">
+                Активность
+              </label>
+              <div className={styles.selectWrapper}>
+                <select id="activity" {...register('activity')} className={styles.select}>
+                  {ACTIVITY_LEVELS.map(l => (
+                    <option key={l.value} value={l.value}>
+                      {l.label}
+                    </option>
+                  ))}
+                </select>
+                <svg
+                  className={styles.chevron}
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <polyline
+                    points="6,9 12,15 18,9"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          {/* Кнопки */}
+          <div className={styles.actions}>
+            {submitted && (
+              <button type="button" className={styles.btnBack} onClick={() => setSubmitted(false)}>
+                ← Назад
+              </button>
+            )}
+            <Button type="submit" animated>
               Рассчитать
             </Button>
           </div>
-        </form>
-
-        {result && (
-          <div className={styles.result}>
-            <div className={styles.resultCard}>
-              <span className={styles.resultValue}>{result.target}</span>
-              <span className={styles.resultUnit}>ккал / день</span>
-              <span className={styles.resultCaption}>
-                {form.goal === 'lose' && 'для снижения веса'}
-                {form.goal === 'maintain' && 'для поддержания веса'}
-                {form.goal === 'gain' && 'для набора веса'}
-              </span>
-            </div>
-            <div className={styles.resultDetails}>
-              <div className={styles.resultDetailItem}>
-                <span className={styles.resultDetailLabel}>Базовый обмен (BMR)</span>
-                <span className={styles.resultDetailValue}>{result.bmr} ккал</span>
-              </div>
-              <div className={styles.resultDetailItem}>
-                <span className={styles.resultDetailLabel}>С учётом активности (TDEE)</span>
-                <span className={styles.resultDetailValue}>{result.tdee} ккал</span>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+        </div>
+      </form>
     </section>
   );
 }

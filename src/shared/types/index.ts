@@ -1,1 +1,1 @@
-// Shared types — global TypeScript types and interfaces
+export * from './calculator';

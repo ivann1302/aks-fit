@@ -1,0 +1,81 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.page {
+  background: $color-primary;
+  min-height: 100vh;
+}
+
+.main {
+  padding: 120px 60px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+
+  @include mobile {
+    padding: 100px 20px 60px;
+    gap: 32px;
+  }
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.eyebrow {
+  font-family: $font-rubik;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: $color-accent;
+}
+
+.title {
+  font-family: $font-playfair;
+  font-size: clamp(32px, 4vw, 52px);
+  font-style: italic;
+  color: $color-text;
+  margin: 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+
+  @include tablet-and-below {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.loadMore {
+  display: flex;
+  justify-content: center;
+}
+
+.loadBtn {
+  padding: 16px 48px;
+  border: 2px solid $color-accent;
+  border-radius: 20px;
+  background: transparent;
+  font-family: $font-rubik;
+  font-size: 15px;
+  font-weight: 600;
+  color: $color-accent;
+  cursor: pointer;
+  transition:
+    background 0.25s ease,
+    color 0.25s ease;
+
+  &:hover {
+    background: $color-accent;
+    color: #fff;
+  }
+}

@@ -1,4 +1,4 @@
-import { faqs } from '../model/faqs';
+import { faqs } from '../model';
 import styles from './FaqSection.module.scss';
 
 export function FaqSection() {

@@ -1,0 +1,233 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.section {
+  background: $color-text;
+  padding: 80px 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 52px;
+  animation: fadeIn 0.5s ease;
+
+  @include mobile {
+    padding: 60px 20px;
+    gap: 36px;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ── Head ───────────────────────────────────────────────────────────────────
+
+.head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.title {
+  font-family: $font-playfair;
+  font-size: clamp(28px, 3.5vw, 44px);
+  font-style: italic;
+  color: #fff;
+  margin: 0;
+}
+
+.subtitle {
+  font-family: $font-rubik;
+  font-size: clamp(14px, 1.3vw, 17px);
+  font-weight: 300;
+  color: rgba(250, 236, 214, 0.65);
+  margin: 0;
+}
+
+// ── Cards ──────────────────────────────────────────────────────────────────
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  width: 100%;
+  max-width: 1100px;
+
+  @include tablet-and-below {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 32px 28px;
+  border: 1.5px solid rgba(250, 236, 214, 0.18);
+  border-radius: 20px;
+}
+
+.cardAccent {
+  background: $color-accent;
+  border-color: $color-accent;
+}
+
+.cardIcon {
+  color: $color-accent;
+  display: flex;
+
+  .cardAccent & {
+    color: #fff;
+  }
+}
+
+.cardValue {
+  font-family: $font-playfair;
+  font-size: clamp(36px, 4vw, 48px);
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+  margin-top: 4px;
+}
+
+.cardUnit {
+  font-family: $font-rubik;
+  font-size: 14px;
+  color: rgba(250, 236, 214, 0.65);
+}
+
+.cardLabel {
+  font-family: $font-rubik;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 4px;
+}
+
+// ── Macro block ────────────────────────────────────────────────────────────
+
+.macroBlock {
+  width: 100%;
+  max-width: 1100px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding: 36px 40px;
+  background: rgba(250, 236, 214, 0.07);
+  border: 1.5px solid rgba(250, 236, 214, 0.12);
+  border-radius: 20px;
+
+  @include mobile {
+    padding: 24px 20px;
+  }
+}
+
+.macroTitle {
+  font-family: $font-playfair;
+  font-size: clamp(18px, 1.8vw, 22px);
+  font-style: italic;
+  color: #fff;
+  margin: 0;
+}
+
+// ── Chart ──────────────────────────────────────────────────────────────────
+
+.chartWrap {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  flex-wrap: wrap;
+
+  @include mobile {
+    gap: 28px;
+  }
+}
+
+.chartContainer {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  flex-shrink: 0;
+}
+
+.chartSvg {
+  display: block;
+  width: 180px;
+  height: 180px;
+}
+
+.chartCenter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.chartValue {
+  font-family: $font-playfair;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+}
+
+.chartUnit {
+  font-family: $font-rubik;
+  font-size: 12px;
+  color: rgba(250, 236, 214, 0.55);
+}
+
+// ── Legend ─────────────────────────────────────────────────────────────────
+
+.legend {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.legendDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legendLabel {
+  font-family: $font-rubik;
+  font-size: 15px;
+  color: rgba(250, 236, 214, 0.8);
+  flex: 1;
+}
+
+.legendVal {
+  font-family: $font-rubik;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+}

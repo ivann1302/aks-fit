@@ -1,0 +1,17 @@
+@use '../../../styles/variables' as *;
+
+.page {
+  overflow: hidden;
+}
+
+.wrapper {
+  width: 100%;
+  left: 0;
+  position: fixed;
+  background: $color-primary;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.main {
+  padding-top: 72px; // высота хедера
+}

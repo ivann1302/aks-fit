@@ -1,64 +1,100 @@
-'use client';
-
-import { useEffect, useRef } from 'react';
-import Image from 'next/image';
+import Link from 'next/link';
 import styles from './PricingSection.module.scss';
 
+const PLANS = [
+  {
+    id: 'start',
+    label: 'Старт',
+    price: '5 000 ₽',
+    desc: 'Базовая программа для тех, кто только начинает путь к результату',
+    features: [
+      'Индивидуальный план тренировок',
+      'Рекомендации по питанию',
+      'Поддержка в мессенджере',
+      'Ежемесячная корректировка программы',
+    ],
+    dark: false,
+  },
+  {
+    id: 'progress',
+    label: 'Прогресс',
+    price: '9 000 ₽',
+    badge: 'Популярный',
+    desc: 'Полное сопровождение с персональной коррекцией на каждом этапе',
+    features: [
+      'Индивидуальный план тренировок',
+      'Детальный план питания с расчётом КБЖУ',
+      'Видеоразборы техники упражнений',
+      'Еженедельная коррекция и чек-ин',
+      'Приоритетный ответ в течение 2 часов',
+    ],
+    dark: true,
+  },
+  {
+    id: 'premium',
+    label: 'Премиум',
+    price: '15 000 ₽',
+    desc: 'VIP-сопровождение для максимально быстрого и устойчивого результата',
+    features: [
+      'Всё из тарифа «Прогресс»',
+      'Онлайн-тренировки в прямом эфире',
+      'Ответ в течение 30 минут 24/7',
+      'Анализ прогресса каждые 2 недели',
+      'Персональные рецепты под твой вкус',
+    ],
+    dark: false,
+  },
+];
+
 export function PricingSection() {
-  const leftRef = useRef<HTMLDivElement>(null);
-  const rightRef = useRef<HTMLDivElement>(null);
-  const bottomRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const els = [leftRef.current, rightRef.current, bottomRef.current];
-    const observer = new IntersectionObserver(
-      entries => entries.forEach(e => e.isIntersecting && e.target.classList.add(styles.visible)),
-      { threshold: 0.15 }
-    );
-    els.forEach(el => el && observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <section className={styles.pricing}>
-      <div className={styles.inner}>
-        <div className={styles.container}>
-          <div className={styles.topRow}>
-            <div ref={leftRef} className={`${styles.cardLeft} ${styles.slideLeft}`}>
-              <h2 className={styles.title}>Онлайн-программа</h2>
-              <p className={styles.price}>от 5 000 ₽ / месяц</p>
-              <ul className={styles.list}>
-                <li>Индивидуальный план тренировок</li>
-                <li>Персональный план питания</li>
-                <li>Постоянная поддержка и обратная связь</li>
-                <li>Корректировка программы под прогресс</li>
-              </ul>
-              <p className={styles.description}>
-                Индивидуальный план тренировок и питания, постоянная поддержка и корректировка
-                программы под твой прогресс и цели.
-              </p>
-            </div>
-
-            <div ref={rightRef} className={`${styles.cardRight} ${styles.slideRight}`}>
-              <div className={styles.imageWrapper}>
-                <Image src="/images/young.webp" alt="Тренировка" fill className={styles.image} />
-              </div>
-              <p className={styles.imageCaption}>Результат уже через 4 недели</p>
-            </div>
-          </div>
-
-          <div ref={bottomRef} className={`${styles.cardBottom} ${styles.slideUp}`}>
-            <p className={styles.bottomText}>
-              Первая консультация бесплатно — напиши мне, и мы подберём программу именно под тебя
-            </p>
-          </div>
-        </div>
-
-        <p className={styles.note}>
-          Цена зависит от выбранного пакета и длительности программы. Свяжитесь со мной для
-          уточнения деталей.
+    <section id="pricing" className={styles.section}>
+      <div className={styles.head}>
+        <span className={styles.eyebrow}>Тарифы</span>
+        <h2 className={styles.title}>Выбери свой формат</h2>
+        <p className={styles.subtitle}>
+          Персональный подход к каждому клиенту — от первой тренировки до стабильного результата
         </p>
       </div>
+
+      <div className={styles.grid}>
+        {PLANS.map(plan => (
+          <div key={plan.id} className={`${styles.card} ${plan.dark ? styles.cardDark : ''}`}>
+            {plan.badge && (
+              <div className={styles.badgeRow}>
+                <span className={styles.badge}>{plan.badge}</span>
+              </div>
+            )}
+            <div className={styles.cardTop}>
+              <span className={styles.label}>{plan.label}</span>
+              <div className={styles.priceRow}>
+                <span className={styles.price}>{plan.price}</span>
+                <span className={styles.per}>/ месяц</span>
+              </div>
+              <p className={styles.desc}>{plan.desc}</p>
+            </div>
+            <div className={styles.divider} />
+            <div className={styles.cardBody}>
+              <ul className={styles.features}>
+                {plan.features.map(f => (
+                  <li key={f}>
+                    <span className={styles.dot} />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <Link href="/#contacts" className={styles.btn}>
+                Выбрать тариф
+              </Link>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <p className={styles.note}>
+        <span className={styles.noteStar}>✦</span>
+        Первая консультация бесплатна — напишите мне, и мы подберём программу под вас
+      </p>
     </section>
   );
 }

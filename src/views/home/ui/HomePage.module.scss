@@ -1,0 +1,17 @@
+@use '../../../styles/variables' as *;
+
+.scrollAnimate {
+  overflow: hidden;
+}
+
+.scrollAnimateMain {
+  width: 100%;
+  left: 0;
+  position: fixed;
+  transition: all 0.4s cubic-bezier(0, 0, 0, 1);
+}
+
+.wrapperParallax {
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  background: $color-primary;
+}

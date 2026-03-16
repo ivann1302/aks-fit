@@ -1,20 +1,4 @@
-export type Gender = 'male' | 'female';
-export type Goal = 'lose' | 'maintain' | 'gain';
-
-export interface CalculatorFormData {
-  gender: Gender;
-  age: string;
-  weight: string;
-  height: string;
-  activity: number;
-  goal: Goal;
-}
-
-export interface CalculatorResult {
-  bmr: number;
-  tdee: number;
-  target: number;
-}
+import type { Goal } from '@/shared/types';
 
 export const ACTIVITY_LEVELS = [
   {

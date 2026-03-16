@@ -1,0 +1,222 @@
+@use '../../../styles/variables' as *;
+
+.qa {
+  background: $color-primary;
+  position: relative;
+  z-index: 1;
+  padding: 100px 60px;
+
+  @media (max-width: $bp-mobile) {
+    padding: 60px 24px;
+  }
+}
+
+.inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.title {
+  font-family: $font-playfair;
+  font-size: clamp(28px, 3.5vw, 48px);
+  font-style: italic;
+  color: $color-text;
+  margin-bottom: 56px;
+  line-height: 1.2;
+}
+
+// ── Пара вопрос/ответ ──────────────────────────────────────
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 56px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  // до появления — вопрос скрыт влево, ответ вправо
+  .question {
+    opacity: 0;
+    transform: translateX(-40px);
+    transition:
+      opacity 0.5s ease,
+      transform 0.5s ease;
+  }
+
+  .answer {
+    opacity: 0;
+    transform: translateX(40px);
+    transition:
+      opacity 0.5s ease 0.2s,
+      transform 0.5s ease 0.2s;
+  }
+
+  // после появления в viewport
+  &.visible {
+    .question {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .answer {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+}
+
+// ── Вопрос (слева) ─────────────────────────────────────────
+
+.question {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  max-width: 80%;
+  padding-bottom: 20px; // место под хвостик
+}
+
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: $color-accent;
+  color: #fff;
+  font-family: $font-playfair;
+  font-style: italic;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+// ── Ответ (справа) ─────────────────────────────────────────
+
+.answer {
+  display: flex;
+  justify-content: flex-end;
+  max-width: 80%;
+  margin-left: auto;
+  padding-bottom: 20px; // место под хвостик
+}
+
+// ── Пузырь (комикс-стиль) ──────────────────────────────────
+//
+// Хвостик делается двумя псевдоэлементами:
+//   ::before — треугольник цвета рамки (внешний)
+//   ::after  — треугольник цвета фона  (внутренний, чуть меньше)
+// Разница в размере = толщина рамки (2px), итог — контурный хвостик.
+
+.bubble {
+  position: relative;
+  padding: 18px 22px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  // ── Вопрос: красная рамка, хвостик снизу-слева ─────────
+
+  .question & {
+    border: 2px solid $color-accent;
+
+    &::before {
+      content: '';
+      position: absolute;
+      bottom: -20px;
+      left: 20px;
+      border-top: 20px solid $color-accent;
+      border-right: 20px solid transparent;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -14px;
+      left: 22px;
+      border-top: 18px solid $color-primary;
+      border-right: 18px solid transparent;
+    }
+  }
+
+  // ── Ответ: тёмная рамка, хвостик снизу-справа ──────────
+
+  .answer & {
+    border: 2px solid rgba($color-text, 0.45);
+
+    &::before {
+      content: '';
+      position: absolute;
+      bottom: -20px;
+      right: 20px;
+      border-top: 20px solid rgba($color-text, 0.45);
+      border-left: 20px solid transparent;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -14px;
+      right: 22px;
+      border-top: 18px solid $color-primary;
+      border-left: 18px solid transparent;
+    }
+  }
+}
+
+// ── Подписи ────────────────────────────────────────────────
+
+// Женский силуэт через mask: один SVG, цвет задаётся background-color
+$female-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='7' r='3.5'/%3E%3Cpath d='M5 21c0-3.5 2.8-6 7-6s7 2.5 7 6' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M8.5 4.5 Q12 2 15.5 4.5' fill='black'/%3E%3C/svg%3E");
+
+.clientName,
+.trainerName {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: $font-playfair;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+
+  &::before {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    mask-image: $female-icon;
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+  }
+}
+
+.clientName {
+  color: $color-accent;
+
+  &::before {
+    background-color: $color-accent;
+  }
+}
+
+.trainerName {
+  color: rgba($color-text, 0.45);
+
+  &::before {
+    background-color: rgba($color-text, 0.45);
+  }
+}
+
+.text {
+  font-family: $font-playfair;
+  font-size: clamp(15px, 1.2vw, 18px);
+  line-height: 1.75;
+  color: $color-text;
+  margin: 0;
+}

@@ -26,7 +26,7 @@ export function AboutSection() {
   }, []);
 
   return (
-    <section className={styles.about}>
+    <section id="about" className={styles.about}>
       <div className={styles.aboutInner}>
         <Image
           src="/images/helloAbout.png"

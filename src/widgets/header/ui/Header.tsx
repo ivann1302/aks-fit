@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 import styles from './Header.module.scss';
 
 interface HeaderProps {
@@ -11,10 +12,22 @@ interface HeaderProps {
 
 export function Header({ headerRef, alwaysVisible = false }: HeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
 
   const headerClass = [styles.stickyHeader, alwaysVisible ? styles.stickyHeaderVisible : ''].join(
     ' '
   );
+
+  const scrollToSection = (id: string) => {
+    setMenuOpen(false);
+    if (pathname === '/') {
+      const el = document.getElementById(id);
+      if (el) window.scrollTo({ top: el.offsetTop, behavior: 'smooth' });
+    } else {
+      router.push(`/#${id}`);
+    }
+  };
 
   return (
     <>
@@ -33,7 +46,7 @@ export function Header({ headerRef, alwaysVisible = false }: HeaderProps) {
             <span className={styles.bar} />
           </button>
           <ul className={menuOpen ? styles.drawerOpen : ''}>
-            <li onClick={() => setMenuOpen(false)}>Обо мне</li>
+            <li onClick={() => scrollToSection('about')}>Обо мне</li>
             <li onClick={() => setMenuOpen(false)}>Фитнес</li>
             <li onClick={() => setMenuOpen(false)}>Питание</li>
             <li onClick={() => setMenuOpen(false)}>Статьи</li>

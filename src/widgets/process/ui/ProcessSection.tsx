@@ -2,10 +2,10 @@
 
 import Image from 'next/image';
 import { useRef, useEffect } from 'react';
-import DESCRIPTIONS from './../model/process';
+import { DESCRIPTIONS } from '../model';
 import styles from './ProcessSection.module.scss';
 
-// Знакомство: силуэт человека + речевой пузырь с точками
+// Знакомство: округлённый речевой пузырь (комикс-стиль)
 const IconMeet = () => (
   <svg
     viewBox="0 0 24 24"
@@ -15,12 +15,10 @@ const IconMeet = () => (
     strokeLinecap="round"
     strokeLinejoin="round"
   >
-    <circle cx="7.5" cy="5.5" r="2.8" />
-    <path d="M1.5 21 C1.5 15.5 4.5 13 7.5 13 C10.5 13 13.5 15.5 13.5 21" />
-    <path d="M14.5 6.5 H21.5 Q22.5 6.5 22.5 7.5 V13 Q22.5 14 21.5 14 H18 L16.5 16.5 L16 14 H14.5 Q13.5 14 13.5 13 V7.5 Q13.5 6.5 14.5 6.5 Z" />
-    <circle cx="16.5" cy="10.5" r="0.55" fill="currentColor" stroke="none" />
-    <circle cx="18.5" cy="10.5" r="0.55" fill="currentColor" stroke="none" />
-    <circle cx="20.5" cy="10.5" r="0.55" fill="currentColor" stroke="none" />
+    <path d="M3 5.5 Q3 2.5 6 2.5 H18 Q21 2.5 21 5.5 V13 Q21 16 18 16 H13.5 L10.5 20 L10 16 H6 Q3 16 3 13 Z" />
+    <circle cx="8.5" cy="9.5" r="0.6" fill="currentColor" stroke="none" />
+    <circle cx="12" cy="9.5" r="0.6" fill="currentColor" stroke="none" />
+    <circle cx="15.5" cy="9.5" r="0.6" fill="currentColor" stroke="none" />
   </svg>
 );
 
@@ -150,13 +148,14 @@ export function ProcessSection() {
     const parallax = parallaxRef.current;
     if (!section || !parallax) return;
 
-    const MAX_OFFSET = 180;
+    const MAX_OFFSET = 350;
 
     const onScroll = () => {
       const rect = section.getBoundingClientRect();
-      const scrolledIn = -rect.top;
-      const clamped = Math.max(0, Math.min(section.offsetHeight, scrolledIn));
-      parallax.style.transform = `translateY(${-(clamped / section.offsetHeight) * MAX_OFFSET}px)`;
+      const viewH = window.innerHeight;
+      const scrolled = viewH - rect.top;
+      const progress = Math.max(0, Math.min(1, scrolled / (viewH + section.offsetHeight)));
+      parallax.style.transform = `translateY(${(1 - progress) * MAX_OFFSET}px)`;
     };
 
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -165,7 +164,7 @@ export function ProcessSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className={styles.process}>
+    <section id="process" ref={sectionRef} className={styles.process}>
       <div ref={parallaxRef} className={styles.parallaxWrapper}>
         <div ref={phoneWrapperRef} className={`${styles.phoneWrapper} ${styles.slideLeft}`}>
           <div className={styles.phoneRotate} ref={phoneRef}>

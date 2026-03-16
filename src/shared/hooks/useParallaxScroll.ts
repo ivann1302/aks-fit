@@ -5,7 +5,6 @@ export function useParallaxScroll() {
   const mainRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLElement>(null);
   const footerRef = useRef<HTMLElement>(null);
-  const scrollBtnRef = useRef<HTMLButtonElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const stickyHeaderRef = useRef<HTMLElement>(null);
@@ -23,7 +22,6 @@ export function useParallaxScroll() {
 
     let removeScroll: (() => void) | undefined;
     let heightDocument = 0;
-
     let heroHeight = 0;
 
     const setFooterBottom = (value: string) => {
@@ -33,7 +31,7 @@ export function useParallaxScroll() {
     const applyHeights = () => {
       heroHeight = window.innerHeight;
       const footerHeight = footer.offsetHeight;
-      heightDocument = heroHeight + content.offsetHeight + footerHeight - 20;
+      heightDocument = heroHeight + content.offsetHeight + footerHeight;
 
       container.style.height = `${heightDocument}px`;
       main.style.height = `${heightDocument}px`;
@@ -41,19 +39,10 @@ export function useParallaxScroll() {
       wrapper.style.marginTop = `${heroHeight}px`;
       wrapper.style.marginBottom = `${footerHeight}px`;
       setFooterBottom(`-${footerHeight}px`);
-
-      // Фиксируем позицию кнопки относительно низа экрана (на границе футера)
-      const btn = scrollBtnRef.current;
-      if (btn) {
-        const isMobile = window.innerWidth <= 767;
-        btn.style.bottom = isMobile ? '31px' : `${footerHeight - btn.offsetHeight / 2 - 15}px`;
-      }
     };
 
     const setup = () => {
       applyHeights();
-
-      let scrollEndTimer: ReturnType<typeof setTimeout>;
 
       const handleScroll = () => {
         const scroll = window.scrollY;
@@ -64,23 +53,6 @@ export function useParallaxScroll() {
         if (stickyHeader) {
           stickyHeader.style.transform = scroll > 100 ? 'translateY(0)' : 'translateY(-100%)';
         }
-
-        const btn = scrollBtnRef.current;
-        if (!btn) return;
-
-        // Кнопка видна только после первой секции
-        if (scroll < heroHeight) {
-          btn.style.transform = 'translateX(calc(100% + 50px))';
-          clearTimeout(scrollEndTimer);
-          return;
-        }
-
-        // Прячем при скролле, возвращаем после остановки
-        btn.style.transform = 'translateX(calc(100% + 50px))';
-        clearTimeout(scrollEndTimer);
-        scrollEndTimer = setTimeout(() => {
-          btn.style.transform = 'translateX(0)';
-        }, 400);
       };
 
       window.addEventListener('scroll', handleScroll);
@@ -111,7 +83,6 @@ export function useParallaxScroll() {
     mainRef,
     heroRef,
     footerRef,
-    scrollBtnRef,
     contentRef,
     wrapperRef,
     stickyHeaderRef,
